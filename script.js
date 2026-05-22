@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
 
   // ============================================================
-  // NAVBAR + STATUS BAR SCROLL (FIX #1)
+  // NAVBAR + STATUS BAR SCROLL
   // Status bar collapses; nav slides from top:32px → top:0
   // ============================================================
   const navbar    = document.getElementById('navbar');
@@ -16,6 +16,19 @@ document.addEventListener('DOMContentLoaded', () => {
     // Nav slides up once status bar is gone; also shrink padding
     navbar.classList.toggle('scrolled', y > 60);
   }, { passive: true });
+
+  // Close mobile nav on orientation change
+  window.addEventListener('orientationchange', () => {
+    const mobileNav = document.getElementById('mobile-nav');
+    const burger = document.getElementById('nav-burger');
+    if (mobileNav && mobileNav.classList.contains('open')) {
+      burger.setAttribute('aria-expanded', 'false');
+      burger.setAttribute('aria-label', 'Buka menu navigasi');
+      mobileNav.classList.remove('open');
+      mobileNav.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+  });
 
   // ============================================================
   // HAMBURGER / MOBILE NAV (FIX #2)
