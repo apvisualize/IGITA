@@ -384,6 +384,12 @@
 </body>
 </html>
 
+  <!-- Hidden form untuk kirim data ke Apps Script (bypass CORS) -->
+  <iframe name="igita-hidden-frame" style="display:none"></iframe>
+  <form id="igita-hidden-form" method="POST" target="igita-hidden-frame" style="display:none">
+    <input type="hidden" id="igita-payload" name="data">
+  </form>
+
   <!-- =============================================
        IGITA 2026 — Google Sheets Integration
        ============================================= -->
@@ -446,16 +452,14 @@
           formData.buktiBayar = { base64, mimeType: file.type, fileName: file.name };
         }
 
-        // Gunakan no-cors agar tidak diblokir browser (Google Apps Script selalu redirect)
-        // Data tetap terkirim ke Sheets meskipun response tidak bisa dibaca
-        await fetch(APPS_SCRIPT_URL, {
-          method  : "POST",
-          mode    : "no-cors",
-          headers : { "Content-Type": "text/plain" },
-          body    : JSON.stringify(formData)
-        });
+        // Kirim via hidden form (100% bebas CORS, tidak pakai fetch)
+        const hiddenForm    = document.getElementById("igita-hidden-form");
+        const hiddenPayload = document.getElementById("igita-payload");
+        hiddenForm.action   = APPS_SCRIPT_URL;
+        hiddenPayload.value = JSON.stringify(formData);
+        hiddenForm.submit();
 
-        // Generate kode registrasi lokal (karena response tidak bisa dibaca)
+        // Generate kode registrasi lokal
         const kode = "IGITA-2026-" + Date.now().toString().slice(-4);
 
         const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
