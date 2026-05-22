@@ -249,12 +249,17 @@
           formData.buktiBayar = { base64, mimeType: file.type, fileName: file.name };
         }
 
-        // Kirim via hidden form (bebas CORS)
-        const hiddenForm    = document.getElementById('igita-hidden-form');
-        const hiddenPayload = document.getElementById('igita-payload');
-        if (hiddenForm && hiddenPayload) {
-          hiddenPayload.value = JSON.stringify(formData);
-          hiddenForm.submit();
+        // Kirim ke Google Apps Script via fetch no-cors
+        // (no-cors = tidak bisa baca response, tapi data tetap terkirim)
+        const url = typeof APPS_SCRIPT_URL !== 'undefined' ? APPS_SCRIPT_URL : '';
+        if (url) {
+          const payload = new FormData();
+          payload.append('data', JSON.stringify(formData));
+          fetch(url, {
+            method : 'POST',
+            mode   : 'no-cors',
+            body   : payload
+          }).catch(err => console.warn('Fetch error (diabaikan):', err));
         }
 
         // Tampilkan success screen
