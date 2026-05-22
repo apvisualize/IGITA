@@ -172,7 +172,6 @@
 
       stepText.textContent = 'Langkah ' + currentStep + ' dari ' + TOTAL_STEPS;
       modal.scrollTop = 0;
-      focusFirstInput(currentStep);
     }
 
     btnNext.addEventListener('click', () => {
