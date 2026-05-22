@@ -398,7 +398,12 @@
 
     async function updateKuotaDisplay() {
       try {
-        const res  = await fetch(APPS_SCRIPT_URL);
+        // Tambahkan objek konfigurasi { redirect: "follow" }
+        const res = await fetch(APPS_SCRIPT_URL, {
+          method: 'GET',
+          redirect: 'follow'
+        });
+        
         const data = await res.json();
         const el   = document.querySelector(".quota-info-text");
         if (el) {
