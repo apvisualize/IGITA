@@ -259,7 +259,7 @@ nav.scrolled { top: 0; padding: 12px var(--side-pad); background: rgba(8,15,11,0
    COUNTDOWN
    ============================================================ */
 .countdown-section { padding: 0 var(--side-pad) 70px; position: relative; z-index: 1; }
-.countdown-label { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 14px; }
+.countdown-label { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 14px;}
 .countdown-wrap { display: flex; flex-wrap: wrap; gap: 6px; align-items: flex-end; justify-content: flex-start; }
 .count-block { display: flex; flex-direction: column; align-items: center; background: var(--bg3); border: 1px solid var(--border); padding: 16px 20px; min-width: 88px; border-radius: var(--radius); position: relative; overflow: hidden; }
 .count-block::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--accent), transparent); }
@@ -332,18 +332,20 @@ section {
 .cat-desc  { color: var(--muted); font-size: 0.9rem; line-height: 1.6; margin-bottom: 16px; }
 .cat-quota { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--accent); background: rgba(0,230,118,0.08); padding: 4px 10px; border-radius: 2px; width: fit-content; }
 .cat-card.external .cat-quota { color: var(--accent2); background: rgba(0,188,212,0.08); }
+.cat-grid a { text-decoration: none; color: inherit; display: block;        /* Memastikan area klik penuh sesuai ukuran kartu */
+}
 
 /* ============================================================
    TIMELINE
    ============================================================ */
-.timeline-section { background: var(--bg2); }
+.timeline-section { background: var(--bg2);}
 .timeline { margin-top: 50px; position: relative; padding-left: 8px; }
 .timeline::before { content: ''; position: absolute; left: 34px; top: 0; bottom: 0; width: 1px; background: var(--border); }
 .tl-item { display: flex; gap: 28px; padding: 28px 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
 .tl-item:last-child { border-bottom: none; }
-.tl-dot { width: 52px; height: 52px; min-width: 52px; border: 1px solid var(--border); background: var(--bg); display: flex; align-items: center; justify-content: center; position: relative; z-index: 1; border-radius: var(--radius); font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.72rem; text-align: center; line-height: 1.15; color: var(--accent); }
+.tl-dot { width: 52px; height: 52px; min-width: 52px; border: 1px solid var(--border); background: var(--bg); display: flex; align-items: center; justify-content: center; position: relative; z-index: 1; border-radius: var(--radius); font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.72rem; text-align: center; line-height: 1.15; color: var(--accent);}
 .tl-item.active .tl-dot { border-color: var(--accent); background: rgba(0,230,118,0.08); box-shadow: var(--glow); }
-.tl-content { flex: 1; padding-top: 10px; min-width: 0; }
+.tl-content { flex: 1; padding-top: 10px; min-width: 0;}
 .tl-date    { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--accent); letter-spacing: 0.06em; margin-bottom: 5px; }
 .tl-title   { font-family: 'Syne', sans-serif; font-size: 1.05rem; font-weight: 700; margin-bottom: 4px; }
 .tl-status  { display: inline-block; margin-top: 6px; font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; padding: 3px 9px; border-radius: 2px; line-height: 1.4; background: rgba(107,143,123,0.15); color: var(--muted); }
@@ -441,7 +443,7 @@ footer { border-top: 1px solid var(--border); padding: 36px var(--side-pad); dis
 
   /* Countdown */
   .countdown-section { padding-bottom: 50px; }
-  .countdown-label { font-size: 0.65rem; margin-bottom: 10px; }
+  .countdown-label { font-size: 0.65rem; margin-bottom: 10px; text-align: center; }
   .countdown-wrap { justify-content: center; gap: 4px; }
   .count-block { min-width: 72px; padding: 12px 10px; }
   .count-num { font-size: 1.8rem; }

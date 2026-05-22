@@ -309,5 +309,17 @@
       updateStepUI();
     }
 
+    const urlParams = new URLSearchParams(window.location.search);
+    const katParam = urlParams.get('kategori'); // akan bernilai 'internal' atau 'external'
+
+    if (katParam === 'internal' || katParam === 'external') {
+      // Cari elemen radio input yang sesuai berdasarkan ID di daftar.html
+      const targetRadio = document.getElementById(`radio-${katParam}`);
+      if (targetRadio) {
+        // Simulasikan klik pada radio tersebut agar fungsi rombak UI otomatis berjalan
+        targetRadio.click();
+      }
+    }
+
     updateStepUI();
   })();
