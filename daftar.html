@@ -383,3 +383,121 @@
   <script src="register.js"></script>
 </body>
 </html>
+
+  <!-- =============================================
+       IGITA 2026 — Google Sheets Integration
+       ============================================= -->
+  <script>
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxLEbgydax6RFLNpDGsbrvyHUT6Qdu8yOKysyR4pZynVf65-TZ4KueFnGqP5jI5420Z9w/exec";
+
+    async function updateKuotaDisplay() {
+      try {
+        const res  = await fetch(APPS_SCRIPT_URL);
+        const data = await res.json();
+        const el   = document.querySelector(".quota-info-text");
+        if (el) {
+          el.innerHTML = `Kuota tersisa: <strong>Internal KKG: ${data.internal} slot</strong> · <strong>Eksternal SMA/SMK: ${data.eksternal} slot</strong>. Pendaftaran ditutup otomatis saat penuh.`;
+        }
+      } catch (err) {
+        console.warn("Gagal mengambil kuota:", err);
+      }
+    }
+
+    function fileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload  = () => resolve(reader.result.split(",")[1]);
+        reader.onerror = () => reject(new Error("Gagal membaca file"));
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function collectFormData() {
+      const get = (id) => (document.getElementById(id)?.value || "").trim();
+      const kategoriRadio = document.querySelector('input[name="kategori"]:checked');
+      return {
+        kategori  : kategoriRadio ? (kategoriRadio.value === "internal" ? "Internal KKG" : "Eksternal SMA/SMK") : "",
+        namaTim   : get("nama-tim"),
+        institusi : get("asal-institusi"),
+        a1_nama   : get("m1-nama"),  a1_email : get("m1-email"),  a1_hp : get("m1-hp"),  a1_ig : get("m1-ig"),
+        a2_nama   : get("m2-nama"),  a2_email : get("m2-email"),  a2_hp : get("m2-hp"),  a2_ig : get("m2-ig"),
+        a3_nama   : get("m3-nama"),  a3_email : get("m3-email"),  a3_hp : get("m3-hp"),  a3_ig : get("m3-ig"),
+        a4_nama   : get("m4-nama"),  a4_email : get("m4-email"),  a4_hp : get("m4-hp"),  a4_ig : get("m4-ig"),
+        a5_nama   : get("m5-nama"),  a5_email : get("m5-email"),  a5_hp : get("m5-hp"),  a5_ig : get("m5-ig"),
+      };
+    }
+
+    async function kirimKeSheets() {
+      const btnSubmit  = document.getElementById("btn-submit");
+      const btnText    = btnSubmit?.querySelector(".btn-submit-text");
+      const btnSpinner = btnSubmit?.querySelector(".btn-spinner");
+
+      const formData  = collectFormData();
+      const fileInput = document.getElementById("bukti-bayar");
+      const file      = fileInput?.files[0];
+
+      if (btnSubmit)  btnSubmit.disabled      = true;
+      if (btnText)    btnText.style.display   = "none";
+      if (btnSpinner) btnSpinner.style.display = "inline-block";
+
+      try {
+        if (file) {
+          const base64 = await fileToBase64(file);
+          formData.buktiBayar = { base64, mimeType: file.type, fileName: file.name };
+        }
+
+        const res    = await fetch(APPS_SCRIPT_URL, {
+          method  : "POST",
+          headers : { "Content-Type": "application/json" },
+          body    : JSON.stringify(formData)
+        });
+        const result = await res.json();
+
+        if (result.status === "ok") {
+          const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+          set("success-code", result.kode);
+          set("suc-team",     formData.namaTim);
+          set("suc-cat",      formData.kategori);
+          set("suc-inst",     formData.institusi);
+          set("suc-email",    formData.a1_email);
+
+          const panel3     = document.getElementById("panel-3");
+          const regSuccess = document.getElementById("reg-success");
+          const regFooter  = document.getElementById("reg-footer");
+          if (panel3)     panel3.classList.remove("active");
+          if (regSuccess) regSuccess.classList.add("active");
+          if (regFooter)  regFooter.style.display = "none";
+
+        } else if (result.status === "kuota_penuh") {
+          alert("⚠️ " + result.pesan);
+          if (btnSubmit)  btnSubmit.disabled      = false;
+          if (btnText)    btnText.style.display   = "inline";
+          if (btnSpinner) btnSpinner.style.display = "none";
+        } else {
+          throw new Error(result.pesan || "Terjadi kesalahan server.");
+        }
+
+      } catch (err) {
+        console.error("Gagal kirim:", err);
+        alert("❌ Gagal mengirim pendaftaran. Pastikan koneksi aktif dan coba lagi.\n\nDetail: " + err.message);
+        if (btnSubmit)  btnSubmit.disabled      = false;
+        if (btnText)    btnText.style.display   = "inline";
+        if (btnSpinner) btnSpinner.style.display = "none";
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      updateKuotaDisplay();
+
+      const btnSubmit = document.getElementById("btn-submit");
+      if (btnSubmit) {
+        btnSubmit.addEventListener("click", async () => {
+          const agreeCheck = document.getElementById("agree-check");
+          if (!agreeCheck?.checked) return;
+          const bukti = document.getElementById("bukti-bayar");
+          if (!bukti?.files[0]) return;
+          await kirimKeSheets();
+        });
+      }
+    });
+  </script>
