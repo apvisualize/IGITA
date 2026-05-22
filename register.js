@@ -42,7 +42,7 @@
     });
 
     // ---- Char counter for description ----
-    const desc = document.getElementById('deskripsi-proyek'); // not used
+    const desc = document.getElementById('deskripsi-proyek');
     const counter = document.getElementById('char-counter');
     if (desc && counter) {
       desc.addEventListener('input', () => {
@@ -50,7 +50,7 @@
       });
     }
 
-    // ---- Validation per step ----
+    // ---- Validation helpers ----
     function showErr(id, show) {
       const el = document.getElementById(id);
       if (!el) return;
@@ -64,7 +64,6 @@
     function isEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
     function isPhone(v) { return v.replace(/[\s\-]/g, '').length >= 9; }
 
-    
     function validateStep1() {
       let ok = true;
       const kat = document.querySelector('input[name="kategori"]:checked');
@@ -96,30 +95,28 @@
         { id: 2, req: true },
         { id: 3, req: true },
         { id: 4, req: true },
-        { id: 5, req: false } // Cadangan
+        { id: 5, req: false }
       ];
 
       members.forEach(m => {
         const namId = `m${m.id}-nama`;
-        const emId = `m${m.id}-email`;
-        const hpId = `m${m.id}-hp`;
-        const igId = `m${m.id}-ig`;
+        const emId  = `m${m.id}-email`;
+        const hpId  = `m${m.id}-hp`;
+        const igId  = `m${m.id}-ig`;
 
         const namVal = document.getElementById(namId)?.value.trim() || '';
-        const emVal = document.getElementById(emId)?.value.trim() || '';
-        const hpVal = document.getElementById(hpId)?.value.trim() || '';
-        const igVal = document.getElementById(igId)?.value.trim() || '';
+        const emVal  = document.getElementById(emId)?.value.trim()  || '';
+        const hpVal  = document.getElementById(hpId)?.value.trim()  || '';
+        const igVal  = document.getElementById(igId)?.value.trim()  || '';
 
-        // Jika cadangan dan semua field kosong, abaikan validasi (valid)
         if (!m.req && !namVal && !emVal && !hpVal && !igVal) {
           setInputErr(namId, false); showErr(`err-${namId}`, false);
-          setInputErr(emId, false); showErr(`err-${emId}`, false);
-          setInputErr(hpId, false); showErr(`err-${hpId}`, false);
-          setInputErr(igId, false); showErr(`err-${igId}`, false);
+          setInputErr(emId,  false); showErr(`err-${emId}`,  false);
+          setInputErr(hpId,  false); showErr(`err-${hpId}`,  false);
+          setInputErr(igId,  false); showErr(`err-${igId}`,  false);
           return;
         }
 
-        // Jika wajib ATAU ada salah satu field cadangan diisi sebagian
         const noNam = namVal.length < 2;
         setInputErr(namId, noNam); showErr(`err-${namId}`, noNam);
         if (noNam) ok = false;
@@ -153,31 +150,27 @@
 
       return ok;
     }
-// ---- Step navigation ----
+
+    // ---- Step navigation ----
     function updateStepUI() {
-      // Panels
       document.querySelectorAll('.reg-panel').forEach((p, i) => {
         p.classList.toggle('active', i + 1 === currentStep);
       });
-      // Step dots
       document.querySelectorAll('.reg-step').forEach((s, i) => {
         const n = i + 1;
         s.classList.remove('active', 'done');
         if (n < currentStep) s.classList.add('done');
         if (n === currentStep) s.classList.add('active');
       });
-      // Connectors
       document.getElementById('conn-1-2').classList.toggle('done', currentStep > 1);
       document.getElementById('conn-2-3').classList.toggle('done', currentStep > 2);
 
-      // Buttons
       btnBack.style.display = currentStep > 1 ? 'inline-flex' : 'none';
       const isLast = currentStep === TOTAL_STEPS;
       btnNext.style.display = isLast ? 'none' : 'inline-flex';
       btnSubmit.classList.toggle('visible', isLast);
 
       stepText.textContent = 'Langkah ' + currentStep + ' dari ' + TOTAL_STEPS;
-
       modal.scrollTop = 0;
     }
 
@@ -198,7 +191,7 @@
       }
     });
 
-    // ---- Submit ----
+    // ---- Generate registration code ----
     function generateCode() {
       const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
       let code = 'IGITA-2026-';
@@ -206,49 +199,98 @@
       return code;
     }
 
-    btnSubmit.addEventListener('click', () => {
+    // ---- Submit: kirim ke Google Sheets via hidden form ----
+    btnSubmit.addEventListener('click', async () => {
       if (!validateStep3()) return;
 
-      // Loading state
       btnSubmit.classList.add('loading');
       btnSubmit.disabled = true;
-      btnBack.disabled = true;
+      btnBack.disabled   = true;
 
-      // Simulate network delay (replace with real fetch to your backend)
-      setTimeout(() => {
-        const kat = document.querySelector('input[name="kategori"]:checked')?.value;
+      try {
+        const get = (id) => (document.getElementById(id)?.value || '').trim();
+        const kat      = document.querySelector('input[name="kategori"]:checked')?.value;
         const katLabel = kat === 'internal' ? 'Internal – Mahasiswa KKG' : 'Eksternal – SMA/SMK';
+        const kode     = generateCode();
 
-        // Populate success screen
-        document.getElementById('success-code').textContent = generateCode();
-        document.getElementById('suc-team').textContent  = document.getElementById('nama-tim').value.trim();
-        document.getElementById('suc-cat').textContent   = katLabel;
-        document.getElementById('suc-inst').textContent  = kat === 'internal' ? 'Internal KKG' : document.getElementById('asal-institusi').value.trim();
-        document.getElementById('suc-email').textContent = document.getElementById('m1-email').value.trim();
+        const formData = {
+          kodeRegistrasi : kode,
+          timestamp      : new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' }),
+          kategori       : katLabel,
+          namaTim        : get('nama-tim'),
+          institusi      : kat === 'internal' ? 'Internal KKG' : get('asal-institusi'),
+          // Anggota 1 (Ketua)
+          a1_nama  : get('m1-nama'),  a1_email : get('m1-email'),
+          a1_hp    : get('m1-hp'),    a1_ig    : get('m1-ig'),
+          // Anggota 2
+          a2_nama  : get('m2-nama'),  a2_email : get('m2-email'),
+          a2_hp    : get('m2-hp'),    a2_ig    : get('m2-ig'),
+          // Anggota 3
+          a3_nama  : get('m3-nama'),  a3_email : get('m3-email'),
+          a3_hp    : get('m3-hp'),    a3_ig    : get('m3-ig'),
+          // Anggota 4
+          a4_nama  : get('m4-nama'),  a4_email : get('m4-email'),
+          a4_hp    : get('m4-hp'),    a4_ig    : get('m4-ig'),
+          // Anggota 5 (Cadangan - opsional)
+          a5_nama  : get('m5-nama'),  a5_email : get('m5-email'),
+          a5_hp    : get('m5-hp'),    a5_ig    : get('m5-ig'),
+        };
 
-        // Hide form panels & footer
-        document.querySelectorAll('.reg-panel').forEach(p => { p.classList.remove('active'); p.style.display = 'none'; });
+        // Konversi bukti bayar ke base64
+        const fileInput = document.getElementById('bukti-bayar');
+        const file = fileInput?.files[0];
+        if (file) {
+          const base64 = await new Promise((res, rej) => {
+            const reader = new FileReader();
+            reader.onload  = () => res(reader.result.split(',')[1]);
+            reader.onerror = () => rej(new Error('Gagal membaca file'));
+            reader.readAsDataURL(file);
+          });
+          formData.buktiBayar = { base64, mimeType: file.type, fileName: file.name };
+        }
+
+        // Kirim via hidden form (bebas CORS)
+        const hiddenForm    = document.getElementById('igita-hidden-form');
+        const hiddenPayload = document.getElementById('igita-payload');
+        if (hiddenForm && hiddenPayload) {
+          hiddenPayload.value = JSON.stringify(formData);
+          hiddenForm.submit();
+        }
+
+        // Tampilkan success screen
+        document.getElementById('success-code').textContent = kode;
+        document.getElementById('suc-team').textContent     = formData.namaTim;
+        document.getElementById('suc-cat').textContent      = katLabel;
+        document.getElementById('suc-inst').textContent     = formData.institusi;
+        document.getElementById('suc-email').textContent    = formData.a1_email;
+
+        document.querySelectorAll('.reg-panel').forEach(p => {
+          p.classList.remove('active');
+          p.style.display = 'none';
+        });
         document.getElementById('reg-steps').style.display = 'none';
         regFooter.style.display = 'none';
-
-        // Show success
         document.getElementById('reg-success').classList.add('active');
         modal.scrollTop = 0;
 
-      }, 1800);
+      } catch (err) {
+        console.error('Gagal kirim:', err);
+        alert('Gagal mengirim pendaftaran. Pastikan koneksi aktif dan coba lagi.\n\nDetail: ' + err.message);
+        btnSubmit.classList.remove('loading');
+        btnSubmit.disabled = false;
+        btnBack.disabled   = false;
+      }
     });
 
-    // On close reset
+    // ---- Reset modal ----
     function resetModal() {
       currentStep = 1;
-      // Restore panels/footer
       document.querySelectorAll('.reg-panel').forEach(p => { p.style.display = ''; p.classList.remove('active'); });
       document.getElementById('panel-1').classList.add('active');
       document.getElementById('reg-steps').style.display = '';
       regFooter.style.display = '';
       document.getElementById('reg-success').classList.remove('active');
 
-      // Clear form
       document.querySelectorAll('.reg-modal input, .reg-modal textarea, .reg-modal select').forEach(el => {
         if (el.type === 'radio' || el.type === 'checkbox') el.checked = false;
         else if (el.type === 'file') el.value = '';
@@ -258,14 +300,9 @@
       document.querySelectorAll('.form-error').forEach(e => e.classList.remove('visible'));
       document.querySelectorAll('.form-input, .form-textarea, .form-select').forEach(i => i.classList.remove('error'));
       document.getElementById('agree-wrap').style.borderColor = '';
-      // document.getElementById('char-counter').textContent = '0 / 300 karakter';
       btnSubmit.classList.remove('loading'); btnSubmit.disabled = false; btnBack.disabled = false;
       updateStepUI();
     }
-
-    document.getElementById('btn-success-close').addEventListener('click', () => {
-        window.location.href = 'index.html';
-    });
 
     updateStepUI();
   })();
