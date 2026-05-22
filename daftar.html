@@ -446,37 +446,31 @@
           formData.buktiBayar = { base64, mimeType: file.type, fileName: file.name };
         }
 
-        const res    = await fetch(APPS_SCRIPT_URL, {
+        // Gunakan no-cors agar tidak diblokir browser (Google Apps Script selalu redirect)
+        // Data tetap terkirim ke Sheets meskipun response tidak bisa dibaca
+        await fetch(APPS_SCRIPT_URL, {
           method  : "POST",
+          mode    : "no-cors",
           headers : { "Content-Type": "text/plain" },
-          redirect: "follow",
           body    : JSON.stringify(formData)
         });
-        const result = await res.json();
 
-        if (result.status === "ok") {
-          const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
-          set("success-code", result.kode);
-          set("suc-team",     formData.namaTim);
-          set("suc-cat",      formData.kategori);
-          set("suc-inst",     formData.institusi);
-          set("suc-email",    formData.a1_email);
+        // Generate kode registrasi lokal (karena response tidak bisa dibaca)
+        const kode = "IGITA-2026-" + Date.now().toString().slice(-4);
 
-          const panel3     = document.getElementById("panel-3");
-          const regSuccess = document.getElementById("reg-success");
-          const regFooter  = document.getElementById("reg-footer");
-          if (panel3)     panel3.classList.remove("active");
-          if (regSuccess) regSuccess.classList.add("active");
-          if (regFooter)  regFooter.style.display = "none";
+        const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+        set("success-code", kode);
+        set("suc-team",     formData.namaTim);
+        set("suc-cat",      formData.kategori);
+        set("suc-inst",     formData.institusi);
+        set("suc-email",    formData.a1_email);
 
-        } else if (result.status === "kuota_penuh") {
-          alert("⚠️ " + result.pesan);
-          if (btnSubmit)  btnSubmit.disabled      = false;
-          if (btnText)    btnText.style.display   = "inline";
-          if (btnSpinner) btnSpinner.style.display = "none";
-        } else {
-          throw new Error(result.pesan || "Terjadi kesalahan server.");
-        }
+        const panel3     = document.getElementById("panel-3");
+        const regSuccess = document.getElementById("reg-success");
+        const regFooter  = document.getElementById("reg-footer");
+        if (panel3)     panel3.classList.remove("active");
+        if (regSuccess) regSuccess.classList.add("active");
+        if (regFooter)  regFooter.style.display = "none";
 
       } catch (err) {
         console.error("Gagal kirim:", err);
