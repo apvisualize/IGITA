@@ -171,8 +171,8 @@ nav.scrolled { top: 0; padding: 12px var(--side-pad); background: rgba(8,15,11,0
    MOBILE NAV OVERLAY
    ============================================================ */
 .mobile-nav {
-  position: fixed; inset: 0; z-index: 150;
-  background: rgba(8,15,11,0.97); backdrop-filter: blur(24px);
+  position: fixed; inset: 0; z-index: 200;
+  background: #080f0b;
   display: flex; flex-direction: column; justify-content: center;
   align-items: center; gap: 4px;
   transform: translateX(100%);
@@ -182,6 +182,20 @@ nav.scrolled { top: 0; padding: 12px var(--side-pad); background: rgba(8,15,11,0
   padding-top: calc(var(--status-h) + var(--nav-h) + 20px);
 }
 .mobile-nav.open { transform: none; pointer-events: auto; }
+
+/* X close button inside mobile nav */
+.mobile-nav-close {
+  position: absolute;
+  top: 18px; right: 18px;
+  width: 40px; height: 40px;
+  background: none; border: 1px solid var(--border);
+  border-radius: 6px; cursor: pointer;
+  color: var(--muted); font-size: 1rem; line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+.mobile-nav-close:hover { color: var(--accent); border-color: var(--accent); background: rgba(0,230,118,0.06); }
 .mobile-nav a {
   font-family: 'Syne', sans-serif;
   font-size: clamp(1.4rem, 5.5vw, 2rem); font-weight: 800;
@@ -193,16 +207,16 @@ nav.scrolled { top: 0; padding: 12px var(--side-pad); background: rgba(8,15,11,0
 }
 .mobile-nav a:hover, .mobile-nav a:focus-visible { color: var(--accent); border-color: var(--accent); outline: none; }
 .mobile-nav .mobile-cta {
-  margin-top: 24px; background: var(--accent); color: var(--bg);
+  margin-top: 24px; background: transparent; color: var(--accent);
   border-radius: var(--radius); padding: 14px 32px;
   font-size: 1rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
-  border-bottom: none; min-height: 52px;
+  border: 1px solid var(--accent); min-height: 52px;
   display: inline-flex; align-items: center; justify-content: center;
-  width: auto; box-shadow: 0 0 32px rgba(0,230,118,0.25);
-  transition: box-shadow 0.25s;
+  width: auto; transition: background 0.25s, box-shadow 0.25s, color 0.25s;
 }
 .mobile-nav .mobile-cta:hover, .mobile-nav .mobile-cta:focus-visible {
-  border-color: transparent; box-shadow: 0 0 50px rgba(0,230,118,0.4); outline: none;
+  background: var(--accent); color: var(--bg); border-color: var(--accent);
+  box-shadow: var(--glow); outline: none;
 }
 
 /* ============================================================
@@ -254,6 +268,11 @@ nav.scrolled { top: 0; padding: 12px var(--side-pad); background: rgba(8,15,11,0
 
 .btn-secondary { color: var(--muted); font-size: 0.88rem; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: color 0.2s; font-weight: 500; min-height: 44px; padding: 8px 0; }
 .btn-secondary:hover, .btn-secondary:focus-visible { color: var(--text); outline: none; }
+
+.btn-back-fixed {position: fixed; top: 20px; left: 20px; z-index: 9999; display: inline-flex; align-items: center; gap: 7px; font-family: 'DM Sans', sans-serif; font-size: 0.82rem; font-weight: 500; color: rgba(255,255,255,0.55); background: rgba(8,15,11,0.7); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 8px 14px 8px 10px; text-decoration: none; cursor: pointer; transition: color 0.2s, border-color 0.2s, background 0.2s;}
+.btn-back-fixed:hover {color: #00e676; border-color: rgba(0,230,118,0.4); background: rgba(0,230,118,0.07);}
+.btn-back-fixed svg {transition: transform 0.2s; flex-shrink: 0;}
+.btn-back-fixed:hover svg {transform: translateX(-3px);}
 
 /* ============================================================
    COUNTDOWN
@@ -343,7 +362,7 @@ section {
 .timeline::before { content: ''; position: absolute; left: 34px; top: 0; bottom: 0; width: 1px; background: var(--border); }
 .tl-item { display: flex; gap: 28px; padding: 28px 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
 .tl-item:last-child { border-bottom: none; }
-.tl-dot { width: 52px; height: 52px; min-width: 52px; border: 1px solid var(--border); background: var(--bg); display: flex; align-items: center; justify-content: center; position: relative; z-index: 1; border-radius: var(--radius); font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.72rem; text-align: center; line-height: 1.15; color: var(--accent);}
+.tl-dot { width: 64px; height: 64px; min-width: 64px; border: 1px solid var(--border); background: var(--bg); display: flex; align-items: center; justify-content: center; position: relative; z-index: 1; border-radius: var(--radius); font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.8rem; text-align: center; line-height: 1.25; color: var(--accent);}
 .tl-item.active .tl-dot { border-color: var(--accent); background: rgba(0,230,118,0.08); box-shadow: var(--glow); }
 .tl-content { flex: 1; padding-top: 10px; min-width: 0;}
 .tl-date    { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--accent); letter-spacing: 0.06em; margin-bottom: 5px; }
@@ -433,7 +452,7 @@ footer { border-top: 1px solid var(--border); padding: 36px var(--side-pad); dis
   /* Hero */
   .hero { padding: calc(var(--nav-h) + 40px) var(--side-pad) 60px; min-height: auto; }
   .hero-badge { font-size: 0.65rem; padding: 5px 12px; margin-bottom: 16px; }
-  .hero-title { font-size: clamp(2.2rem, 10vw, 3.2rem); line-height: 0.95; }
+  .hero-title { font-size: clamp(2rem, 8vw, 3.2rem); line-height: 0.95; word-break: keep-all; }
   .hero-sub { font-size: 0.92rem; margin-top: 18px; max-width: 100%; }
   .hero-tags { gap: 6px; margin-top: 18px; }
   .hero-tag { font-size: 0.72rem; padding: 4px 10px; }
@@ -473,7 +492,7 @@ footer { border-top: 1px solid var(--border); padding: 36px var(--side-pad); dis
   .timeline { margin-top: 36px; padding-left: 0; }
   .timeline::before { left: 24px; }
   .tl-item { gap: 16px; padding: 20px 0; }
-  .tl-dot { width: 48px; height: 48px; min-width: 48px; font-size: 0.68rem; }
+  .tl-dot { width: 60px; height: 60px; min-width: 60px; font-size: 0.75rem; }
   .tl-content { padding-top: 4px; }
   .tl-date { font-size: 0.65rem; }
   .tl-title { font-size: 0.95rem; }
@@ -521,7 +540,7 @@ footer { border-top: 1px solid var(--border); padding: 36px var(--side-pad); dis
 
   /* Hero */
   .hero { padding: calc(var(--nav-h) + 30px) var(--side-pad) 50px; }
-  .hero-title { font-size: clamp(1.9rem, 11vw, 2.6rem); line-height: 0.98; }
+  .hero-title { font-size: clamp(1.5rem, 8.5vw, 2rem); line-height: 1; word-break: keep-all; overflow-wrap: normal; }
   .hero-title .line2 { -webkit-text-stroke: 1px rgba(0,230,118,0.55); }
   .hero-badge { font-size: 0.6rem; padding: 4px 10px; letter-spacing: 0.08em; }
   .hero-sub { font-size: 0.88rem; line-height: 1.55; }
@@ -543,7 +562,7 @@ footer { border-top: 1px solid var(--border); padding: 36px var(--side-pad); dis
   /* Timeline */
   .timeline::before { left: 20px; }
   .tl-item { gap: 12px; padding: 18px 0; }
-  .tl-dot { width: 40px; height: 40px; min-width: 40px; font-size: 0.6rem; }
+  .tl-dot { width: 56px; height: 56px; min-width: 56px; font-size: 0.7rem; }
   .tl-content { padding-top: 2px; }
   .tl-title { font-size: 0.9rem; }
   .tl-status { font-size: 0.6rem; }
@@ -583,7 +602,7 @@ footer { border-top: 1px solid var(--border); padding: 36px var(--side-pad); dis
   .count-num { font-size: 1.3rem; }
   .count-sep { font-size: 1.1rem; padding-top: 4px; }
 
-  .tl-dot { width: 36px; height: 36px; min-width: 36px; font-size: 0.55rem; }
+  .tl-dot { width: 52px; height: 52px; min-width: 52px; font-size: 0.65rem; }
   .timeline::before { left: 18px; }
   .tl-item { gap: 10px; }
 
@@ -1056,6 +1075,7 @@ body.reg-page .reg-close { display: none !important; }
   .success-title { font-size: 1.2rem; }
   .success-sub { font-size: 0.8rem; }
   .btn-reg-close { width: 100%; justify-content: center; }
+  .btn-back-fixed {top: 14px; left: 14px; padding: 7px 11px 7px 9px; font-size: 0.78rem;}
 
   body.reg-page { padding-top: 50px; }
   body.reg-page .reg-overlay { padding: 12px; }

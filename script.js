@@ -56,6 +56,10 @@ document.addEventListener('DOMContentLoaded', () => {
     burger.focus(); // return focus to trigger
   }
 
+  // Close button inside mobile nav
+  const mobileNavClose = document.getElementById('mobile-nav-close');
+  if (mobileNavClose) mobileNavClose.addEventListener('click', closeMenu);
+
   burger.addEventListener('click', () => {
     const isOpen = mobileNav.classList.contains('open');
     isOpen ? closeMenu() : openMenu();
