@@ -127,10 +127,11 @@ nav.scrolled { top: 0; padding: 12px var(--side-pad); background: rgba(6,8,15,0.
   display: flex;
   align-items: center;
   flex-shrink: 0;
+  gap: 12px;
 }
 /* Logo image — warna diubah ke cyan #00d4ff via CSS filter */
 .nav-logo-img {
-  height: 52px;
+  height: 38px;
   width: auto;
   object-fit: contain;
   display: block;
@@ -139,7 +140,7 @@ nav.scrolled { top: 0; padding: 12px var(--side-pad); background: rgba(6,8,15,0.
           invert(72%) sepia(97%)
           saturate(400%) hue-rotate(160deg)
           brightness(105%);
-  transition: filter 0.3s ease, transform 0.3s ease;
+  transition: filter 0.3s ease;
 }
 .nav-logo:hover .nav-logo-img,
 .nav-logo:focus-visible .nav-logo-img {
@@ -147,11 +148,21 @@ nav.scrolled { top: 0; padding: 12px var(--side-pad); background: rgba(6,8,15,0.
           invert(85%) sepia(97%)
           saturate(500%) hue-rotate(155deg)
           brightness(120%);
-  transform: scale(1.04);
+}
+.nav-logo-text {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1rem;
+  color: var(--text);
+  letter-spacing: 0.04em;
+}
+.nav-logo-year {
+  color: var(--accent);
+  margin-left: 4px;
 }
 /* Footer logo */
 .footer-logo-img {
-  height: 52px;
+  height: 38px;
   width: auto;
   object-fit: contain;
   display: block;
@@ -169,6 +180,18 @@ nav.scrolled { top: 0; padding: 12px var(--side-pad); background: rgba(6,8,15,0.
           invert(85%) sepia(97%)
           saturate(500%) hue-rotate(155deg)
           brightness(120%);
+}
+.footer-logo-text {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1rem;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+}
+.footer-logo-year {
+  color: var(--accent);
+  margin-left: 4px;
+  opacity: 0.75;
 }
 
 .nav-links { display: flex; gap: 32px; flex-shrink: 0; }
@@ -449,7 +472,7 @@ section {
    FOOTER
    ============================================================ */
 footer { border-top: 1px solid var(--border); padding: 36px var(--side-pad); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
-.footer-brand { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.05rem; }
+.footer-brand { display: flex; align-items: center; gap: 10px; }
 .footer-brand span { color: var(--accent); }
 .footer-links { display: flex; gap: 24px; flex-wrap: wrap; }
 .footer-links a { color: var(--muted); font-size: 0.82rem; text-decoration: none; transition: color 0.2s; padding: 6px 0; }
