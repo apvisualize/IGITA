@@ -773,10 +773,15 @@ footer { border-top: 1px solid var(--border); padding: 36px var(--side-pad); dis
 .step-num {
   width: 28px; height: 28px; border-radius: 50%;
   border: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'Syne', sans-serif; font-size: 0.75rem; font-weight: 700;
+  display: block;
+  text-align: center;
+  line-height: 26px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem; font-weight: 700;
+  padding: 0; margin: 0;
   color: var(--muted); transition: all 0.3s; flex-shrink: 0;
 }
+
 .step-label {
   font-family: 'JetBrains Mono', monospace; font-size: 0.65rem;
   text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted);
@@ -917,6 +922,43 @@ footer { border-top: 1px solid var(--border); padding: 36px var(--side-pad); dis
 }
 
 /* Helper text */
+/* Custom File Upload */
+.file-input-hidden { display: none; }
+.file-upload-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.file-upload-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0,212,255,0.1);
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  padding: 8px 16px;
+  border-radius: var(--radius);
+  font-family: 'Syne', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s;
+  white-space: nowrap;
+  min-height: 36px;
+}
+.file-upload-btn:hover { background: var(--accent); color: var(--bg); }
+.file-upload-name {
+  font-size: 0.82rem;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .form-helper {
   font-family: 'JetBrains Mono', monospace; font-size: 0.62rem;
   color: var(--muted); margin-top: 3px; opacity: 0.8; font-style: normal;
@@ -940,11 +982,43 @@ footer { border-top: 1px solid var(--border); padding: 36px var(--side-pad); dis
   transition: border-color 0.2s;
 }
 .form-agreement:hover { border-color: rgba(0,212,255,0.25); }
-.form-agreement input { margin-top: 2px; accent-color: var(--accent); cursor: pointer; min-width: 16px; min-height: 16px; }
-.form-agreement label {
+
+/* Sembunyikan checkbox asli */
+.custom-checkbox-input { display: none; }
+
+/* Label wrapper */
+.custom-checkbox-label {
+  display: flex; align-items: flex-start; gap: 10px;
   font-size: 0.82rem; color: var(--muted); line-height: 1.5; cursor: pointer;
+  width: 100%;
 }
-.form-agreement label strong { color: var(--text); }
+.custom-checkbox-label strong { color: var(--text); }
+
+/* Kotak checkbox custom */
+.custom-checkbox-box {
+  width: 18px; height: 18px; min-width: 18px;
+  border: 1.5px solid var(--border);
+  border-radius: 4px;
+  background: var(--bg2);
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s ease;
+  margin-top: 1px;
+}
+.custom-checkbox-icon {
+  opacity: 0;
+  color: var(--bg);
+  transition: opacity 0.2s ease;
+}
+
+/* Saat dicentang */
+.custom-checkbox-input:checked + .custom-checkbox-label .custom-checkbox-box {
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 10px rgba(0,212,255,0.3);
+}
+.custom-checkbox-input:checked + .custom-checkbox-label .custom-checkbox-icon {
+  opacity: 1;
+}
 
 /* Footer buttons */
 .reg-footer {
@@ -1163,7 +1237,7 @@ body.reg-page .reg-close { display: none !important; }
   .reg-steps { padding: 10px 12px; }
   .reg-footer { padding: 12px 12px 16px; }
   .step-label { font-size: 0.6rem; }
-  .step-num { width: 24px; height: 24px; font-size: 0.68rem; }
+  .step-num { width: 24px; height: 24px; font-size: 0.68rem; line-height: 24px; }
   .cat-select-card { padding: 14px; }
   .member-card { padding: 14px; }
   .form-input, .form-textarea, .form-select { padding: 10px 12px; font-size: 16px; }

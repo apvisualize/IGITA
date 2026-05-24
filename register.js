@@ -550,4 +550,13 @@
   // ============================================================
   initInputSetup();
   updateStepUI();
+
+  // File upload nama file display
+  const buktiInput = document.getElementById('bukti-bayar');
+  const fileNameDisplay = document.getElementById('file-name-display');
+  if (buktiInput && fileNameDisplay) {
+    buktiInput.addEventListener('change', function() {
+      fileNameDisplay.textContent = this.files[0] ? this.files[0].name : 'Belum ada file dipilih';
+    });
+  }
 })();

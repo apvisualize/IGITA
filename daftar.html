@@ -287,7 +287,14 @@
           <div class="form-row single">
             <div class="form-group">
               <label class="form-label" for="bukti-bayar">Upload Bukti Pembayaran <span class="req">*</span></label>
-              <input type="file" class="form-input" id="bukti-bayar" accept="image/*,application/pdf" style="padding: 8px 14px;">
+              <div class="file-upload-wrap">
+                <input type="file" id="bukti-bayar" accept="image/*,application/pdf" class="file-input-hidden">
+                <label for="bukti-bayar" class="file-upload-btn">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                  Upload File
+                </label>
+                <span class="file-upload-name" id="file-name-display">Belum ada file dipilih</span>
+              </div>
               <div class="form-helper">Format: JPG, PNG, atau PDF. Maksimal 2MB.</div>
               <div class="form-error" id="err-bukti-bayar">Bukti pembayaran wajib diunggah.</div>
             </div>
@@ -299,8 +306,15 @@
           </div>
 
           <div class="form-agreement" id="agree-wrap">
-            <input type="checkbox" id="agree-check">
-            <label for="agree-check">Saya menyatakan bahwa seluruh informasi yang diisi adalah <strong>benar dan dapat dipertanggungjawabkan</strong>. Saya telah membaca dan menyetujui seluruh ketentuan IGITA 2026.</label>
+            <input type="checkbox" id="agree-check" class="custom-checkbox-input">
+            <label for="agree-check" class="custom-checkbox-label">
+              <span class="custom-checkbox-box">
+                <svg class="custom-checkbox-icon" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="2 6 5 9 10 3"/>
+                </svg>
+              </span>
+              <span>Saya menyatakan bahwa seluruh informasi yang diisi adalah <strong>benar dan dapat dipertanggungjawabkan</strong>. Saya telah membaca dan menyetujui seluruh ketentuan IGITA 2026.</span>
+            </label>
           </div>
           <div class="form-error" id="err-agree">Anda harus menyetujui ketentuan untuk mendaftar.</div>
         </div>

@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (!phase) {
       // Semua fase selesai — IGITA 2026 sudah berakhir
-      if (labelEl) labelEl.textContent = 'IGITA 2026 Telah Selesai 🎉';
+      if (labelEl) labelEl.textContent = 'IGITA 2026 Telah Selesai';
       IDS.forEach(id => {
         const el = document.getElementById(id);
         if (el) el.textContent = '00';
