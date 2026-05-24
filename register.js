@@ -204,7 +204,7 @@
         const kb = (file.size / 1024).toFixed(0);
         if (helper) {
           helper.textContent = '✓ ' + file.name + ' (' + kb + ' KB)';
-          helper.style.color = 'var(--accent, #00e676)';
+          helper.style.color = 'var(--accent, #00d4ff)';
         }
       }
     });

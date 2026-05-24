@@ -217,7 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const mouse  = { x: null, y: null, radius: 140 };
     const mobile = window.matchMedia('(max-width: 768px)').matches;
     const count  = mobile ? 20 : 45;
-    const colors = ['rgba(0,230,118,0.35)', 'rgba(0,188,212,0.25)', 'rgba(232,245,233,0.18)'];
+    const colors = ['rgba(0,212,255,0.35)', 'rgba(6,182,212,0.25)', 'rgba(224,231,255,0.18)'];
 
     function resize() {
       width  = canvas.width  = window.innerWidth;
