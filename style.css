@@ -11,7 +11,7 @@
   --bg3:       #0c1228;
   --accent:    #00d4ff;
   --accent2:   #06b6d4;
-  --accent3:   #ffd600;
+  --accent3:   #818cf8;
   --text:      #e8eeff;
   --muted:     #6b7fa8;
   --border:    rgba(0,212,255,0.15);
@@ -847,7 +847,6 @@ footer { border-top: 1px solid var(--border); padding: 36px var(--side-pad); dis
   background: rgba(0,212,255,0.1); color: var(--accent);
   padding: 3px 9px; border-radius: 2px;
 }
-.member-badge.leader { background: rgba(255,214,0,0.1); color: var(--accent3); }
 
 /* Helper text */
 .form-helper {
