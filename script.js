@@ -81,15 +81,64 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ============================================================
-  // COUNTDOWN (Target: 11 Agustus 2026 08:00 WIB = UTC+7)
+  // COUNTDOWN — Otomatis berganti target sesuai fase IGITA 2026
+  // Semua waktu dalam UTC (WIB = UTC+7, jadi jam 08.00 WIB = 01.00 UTC)
   // ============================================================
   const IDS = ['cd-days', 'cd-hours', 'cd-mins', 'cd-secs'];
 
-  function updateCountdown() {
-    // 08:00 WIB = 01:00 UTC
-    const deadline = new Date('2026-08-11T01:00:00Z');
-    const diff     = deadline - Date.now();
+  const PHASES = [
+    {
+      label    : 'Pembukaan & Technical Meeting dalam',
+      deadline : new Date('2026-08-11T01:00:00Z'), // 11 Agu 08.00 WIB
+    },
+    {
+      label    : 'Masa Pengerjaan berakhir dalam',
+      deadline : new Date('2026-09-13T17:00:00Z'), // 14 Sep 00.00 WIB (hari-H presentasi)
+    },
+    {
+      label    : 'Presentasi Internal KKG (Day 1) dalam',
+      deadline : new Date('2026-09-14T01:00:00Z'), // 14 Sep 08.00 WIB
+    },
+    {
+      label    : 'Presentasi SMA/SMK (Day 2) dalam',
+      deadline : new Date('2026-09-15T01:00:00Z'), // 15 Sep 08.00 WIB
+    },
+    {
+      label    : 'Awarding & Closing Ceremony dalam',
+      deadline : new Date('2026-09-16T01:00:00Z'), // 16 Sep 08.00 WIB
+    },
+  ];
 
+  function getCurrentPhase() {
+    const now = Date.now();
+    // Cari fase pertama yang deadlinenya belum lewat
+    for (const phase of PHASES) {
+      if (phase.deadline.getTime() > now) return phase;
+    }
+    return null; // semua fase sudah lewat
+  }
+
+  function updateCountdown() {
+    const phase = getCurrentPhase();
+    const labelEl = document.querySelector('.countdown-label');
+
+    if (!phase) {
+      // Semua fase selesai — IGITA 2026 sudah berakhir
+      if (labelEl) labelEl.textContent = 'IGITA 2026 Telah Selesai 🎉';
+      IDS.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = '00';
+      });
+      // Sembunyikan separator jika mau (opsional)
+      return;
+    }
+
+    // Update label sesuai fase aktif
+    if (labelEl && labelEl.textContent !== phase.label) {
+      labelEl.textContent = phase.label;
+    }
+
+    const diff = phase.deadline.getTime() - Date.now();
     if (diff <= 0) {
       IDS.forEach(id => { const el = document.getElementById(id); if (el) el.textContent = '00'; });
       return;
