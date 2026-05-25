@@ -45,6 +45,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // ============================================================
   const navbar    = document.getElementById('navbar');
   const statusBar = document.querySelector('.status-bar');
+  // Hoisted so scroll handler can sync mobile-nav top
+  const mobileNavEl = document.getElementById('mobile-nav');
 
   window.addEventListener('scroll', () => {
     const y = window.scrollY;
@@ -54,6 +56,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Nav slides up once status bar is gone; also shrink padding
     navbar.classList.toggle('scrolled', y > 60);
+
+    // NINJA SCROLL: sync mobile-nav top via CSS class (bukan inline style)
+    // supaya transition-nya sinkron dengan navbar (sama-sama 0.35s ease)
+    if (mobileNavEl) mobileNavEl.classList.toggle('nav-scrolled', y > 60);
   }, { passive: true });
 
   // Close mobile nav on orientation change

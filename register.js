@@ -3,6 +3,33 @@
 // Validasi diperkuat: HP, Email, Instagram, Nama, File
 // ============================================================
 (function() {
+  // ============================================================
+  // TOAST NOTIFICATION
+  // ============================================================
+  function showToast(type, title, msg, duration = 4000) {
+    const container = document.getElementById('toast-container');
+    if (!container) return;
+    const icons = { success: '✅', error: '❌', warning: '⚠️', info: 'ℹ️' };
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.innerHTML = `
+      <span class="toast-icon">${icons[type] || 'ℹ️'}</span>
+      <div class="toast-body">
+        <div class="toast-title">${title}</div>
+        ${msg ? `<div class="toast-msg">${msg}</div>` : ''}
+      </div>
+      <button class="toast-close" aria-label="Tutup notifikasi">✕</button>
+    `;
+    const close = toast.querySelector('.toast-close');
+    function dismiss() {
+      toast.classList.add('hiding');
+      toast.addEventListener('animationend', () => toast.remove(), { once: true });
+    }
+    close.addEventListener('click', dismiss);
+    if (duration > 0) setTimeout(dismiss, duration);
+    container.appendChild(toast);
+  }
+
   const overlay   = document.getElementById('reg-overlay');
   const modal     = document.getElementById('reg-modal');
   const closeBtn  = document.getElementById('reg-close-btn');
@@ -628,11 +655,12 @@
         }
 
         if (!berhasil) {
-          // Tampilkan error ke user, aktifkan kembali tombol
-          alert('❌ Pendaftaran gagal.\n\n' + pesanError + '\n\nData kamu belum masuk. Silakan coba lagi atau hubungi panitia.');
+          showToast('error', 'Pendaftaran Gagal', pesanError + ' Data kamu belum masuk. Silakan coba lagi atau hubungi panitia.');
           btnSubmit.classList.remove('loading');
           btnSubmit.disabled = false;
           btnBack.disabled   = false;
+          confirmSend.disabled = false;
+          confirmSend.textContent = 'Kirim Sekarang ✓';
           return;
         }
       }
@@ -654,9 +682,11 @@
       const regBody = modal.querySelector('.reg-body') || modal;
       regBody.scrollTop = 0;
 
+      showToast('success', 'Pendaftaran Berhasil!', `Kode registrasi kamu: ${kode}`, 6000);
+
     } catch (err) {
       console.error('Gagal kirim:', err);
-      alert('Gagal mengirim pendaftaran. Pastikan koneksi aktif dan coba lagi.\n\nDetail: ' + err.message);
+      showToast('error', 'Gagal Mengirim', 'Pastikan koneksi internet aktif dan coba lagi. Detail: ' + err.message);
       btnSubmit.classList.remove('loading');
       btnSubmit.disabled = false;
       btnBack.disabled   = false;
