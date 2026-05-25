@@ -18,7 +18,7 @@
   --glow:      0 0 40px rgba(0,212,255,0.3);
   --radius:    6px;
   --status-h:  32px;
-  --nav-h:     60px;
+  --nav-h:     72px;
   --side-pad:  clamp(48px, calc((100vw - 1280px) / 2 + 48px), 180px);
 }
 
@@ -326,7 +326,7 @@ nav.scrolled { top: 0; padding: 12px var(--side-pad); background: rgba(6,8,15,0.
 
 /* Saat navbar scrolled (status bar collapse), ikut naik — transition sama dengan navbar */
 .mobile-nav.nav-scrolled {
-  top: var(--nav-h);
+  top: 64px;
 }
 
 /* Overlay gelap di bawah nav */
