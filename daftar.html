@@ -10,6 +10,7 @@
   <meta name="format-detection" content="telephone=no">
   <title>Pendaftaran Tim | IGITA 2026</title>
   <meta name="theme-color" content="#080f0b">
+  <link rel="icon" type="image/png" href="asset/logo.png">
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
@@ -381,6 +382,33 @@
       </div>
 
     </div><!-- end reg-modal -->
+
+    <!-- Modal Konfirmasi -->
+    <div class="confirm-overlay" id="confirm-overlay" aria-hidden="true">
+      <div class="confirm-modal" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+        <div class="confirm-header">
+          <div class="confirm-title" id="confirm-title">Konfirmasi Pendaftaran</div>
+          <div class="confirm-sub">Periksa kembali data tim sebelum dikirim</div>
+        </div>
+        <div class="confirm-body">
+          <div class="confirm-section-label">// Informasi Tim</div>
+          <div class="confirm-row"><span class="confirm-key">Kategori</span><span class="confirm-val" id="cf-kategori">—</span></div>
+          <div class="confirm-row"><span class="confirm-key">Nama Tim</span><span class="confirm-val" id="cf-nama-tim">—</span></div>
+          <div class="confirm-row"><span class="confirm-key">Institusi</span><span class="confirm-val" id="cf-institusi">—</span></div>
+
+          <div class="confirm-section-label" style="margin-top:16px">// Anggota Tim</div>
+          <div id="cf-members"></div>
+
+          <div class="confirm-section-label" style="margin-top:16px">// Bukti Pembayaran</div>
+          <div class="confirm-row"><span class="confirm-key">File</span><span class="confirm-val" id="cf-file">—</span></div>
+        </div>
+        <div class="confirm-footer">
+          <button class="confirm-btn-edit" id="confirm-edit">← Edit Data</button>
+          <button class="confirm-btn-send" id="confirm-send">Kirim Sekarang ✓</button>
+        </div>
+      </div>
+    </div>
+
   </div><!-- end reg-overlay -->
 
   <script src="register.js"></script>

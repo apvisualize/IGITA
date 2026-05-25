@@ -1,6 +1,45 @@
 document.addEventListener('DOMContentLoaded', () => {
 
   // ============================================================
+  // LOADING SCREEN
+  // ============================================================
+  const loaderScreen = document.getElementById('loader-screen');
+  const loaderBar    = document.getElementById('loader-bar');
+  const loaderText   = document.getElementById('loader-text');
+
+  const loadSteps = [
+    { pct: 20, text: 'Menyiapkan tampilan...' },
+    { pct: 50, text: 'Memuat konten...' },
+    { pct: 80, text: 'Menginisialisasi...' },
+    { pct: 100, text: 'Siap!' },
+  ];
+
+  if (loaderScreen) {
+    document.body.classList.add('is-loading');
+    let step = 0;
+
+    function nextStep() {
+      if (step >= loadSteps.length) return;
+      const { pct, text } = loadSteps[step];
+      if (loaderBar) loaderBar.style.width = pct + '%';
+      if (loaderText) loaderText.textContent = text;
+      step++;
+    }
+
+    nextStep();
+    const stepInterval = setInterval(() => {
+      nextStep();
+      if (step >= loadSteps.length) clearInterval(stepInterval);
+    }, 300);
+
+    // Sembunyikan loader setelah semua selesai
+    setTimeout(() => {
+      loaderScreen.classList.add('hidden');
+      document.body.classList.remove('is-loading');
+    }, 1400);
+  }
+
+  // ============================================================
   // NAVBAR + STATUS BAR SCROLL
   // Status bar collapses; nav slides from top:32px → top:0
   // ============================================================

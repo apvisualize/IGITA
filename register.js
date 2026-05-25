@@ -340,10 +340,69 @@
       if (badIg) { ok = false; if (!firstErrEl) firstErrEl = document.getElementById(igId); }
     });
 
-    // Scroll ke field pertama yang error
-    if (firstErrEl) {
-      firstErrEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      firstErrEl.focus();
+    // ---- Cek duplikat email antar anggota ----
+    let firstDupEl = null;
+    const emailVals = [];
+    members.forEach(m => {
+      const val = document.getElementById(`m${m.id}-email`)?.value.trim().toLowerCase() || '';
+      if (val) emailVals.push({ id: m.id, val });
+    });
+    emailVals.forEach((a, i) => {
+      emailVals.forEach((b, j) => {
+        if (i !== j && a.val && a.val === b.val) {
+          const id = `m${a.id}-email`;
+          const el = document.getElementById(id);
+          setInputErr(id, true); setInputOk(id, false);
+          showErr(`err-${id}`, true, `Email sama dengan Anggota ${b.id}. Tiap anggota wajib pakai email berbeda.`);
+          ok = false;
+          if (!firstDupEl) firstDupEl = el;
+        }
+      });
+    });
+
+    // ---- Cek duplikat HP antar anggota ----
+    const hpVals = [];
+    members.forEach(m => {
+      const val = document.getElementById(`m${m.id}-hp`)?.value.trim().replace(/[\s\-]/g, '') || '';
+      if (val) hpVals.push({ id: m.id, val });
+    });
+    hpVals.forEach((a, i) => {
+      hpVals.forEach((b, j) => {
+        if (i !== j && a.val && a.val === b.val) {
+          const id = `m${a.id}-hp`;
+          const el = document.getElementById(id);
+          setInputErr(id, true); setInputOk(id, false);
+          showErr(`err-${id}`, true, `No. HP sama dengan Anggota ${b.id}. Tiap anggota wajib pakai nomor berbeda.`);
+          ok = false;
+          if (!firstDupEl) firstDupEl = el;
+        }
+      });
+    });
+
+    // ---- Cek duplikat Instagram antar anggota ----
+    const igVals = [];
+    members.forEach(m => {
+      const val = document.getElementById(`m${m.id}-ig`)?.value.trim().toLowerCase() || '';
+      if (val) igVals.push({ id: m.id, val });
+    });
+    igVals.forEach((a, i) => {
+      igVals.forEach((b, j) => {
+        if (i !== j && a.val && a.val === b.val) {
+          const id = `m${a.id}-ig`;
+          const el = document.getElementById(id);
+          setInputErr(id, true); setInputOk(id, false);
+          showErr(`err-${id}`, true, `Akun Instagram sama dengan Anggota ${b.id}. Tiap anggota wajib pakai akun berbeda.`);
+          ok = false;
+          if (!firstDupEl) firstDupEl = el;
+        }
+      });
+    });
+
+    // Scroll ke field pertama yang error — duplikat diprioritaskan
+    const scrollTarget = firstDupEl || firstErrEl;
+    if (scrollTarget) {
+      scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      scrollTarget.focus();
     }
 
     return ok;
@@ -422,8 +481,74 @@
   // ============================================================
   // SUBMIT — KIRIM KE GOOGLE SHEETS
   // ============================================================
-  btnSubmit.addEventListener('click', async () => {
+  // ============================================================
+  // CONFIRM MODAL
+  // ============================================================
+  const confirmOverlay = document.getElementById('confirm-overlay');
+  const confirmEdit    = document.getElementById('confirm-edit');
+  const confirmSend    = document.getElementById('confirm-send');
+
+  function openConfirmModal() {
+    const get = (id) => (document.getElementById(id)?.value || '').trim();
+    const kat      = document.querySelector('input[name="kategori"]:checked')?.value;
+    const katLabel = kat === 'internal' ? 'Internal – Mahasiswa KKG' : 'Eksternal – SMA/SMK';
+    const institusi = kat === 'internal' ? 'Internal KKG' : get('asal-institusi');
+
+    document.getElementById('cf-kategori').textContent  = katLabel;
+    document.getElementById('cf-nama-tim').textContent  = get('nama-tim');
+    document.getElementById('cf-institusi').textContent = institusi;
+
+    // Render anggota
+    const cfMembers = document.getElementById('cf-members');
+    cfMembers.innerHTML = '';
+    const labels = ['Anggota 1 (Ketua)', 'Anggota 2', 'Anggota 3', 'Anggota 4', 'Anggota 5 (Cadangan)'];
+    for (let i = 1; i <= 5; i++) {
+      const nama = get(`m${i}-nama`);
+      if (!nama) continue;
+      const block = document.createElement('div');
+      block.className = 'confirm-member-block';
+      block.innerHTML = `
+        <div class="confirm-member-title">${labels[i-1]}</div>
+        <div class="confirm-row"><span class="confirm-key">Nama</span><span class="confirm-val">${nama}</span></div>
+        <div class="confirm-row"><span class="confirm-key">Email</span><span class="confirm-val">${get(`m${i}-email`)}</span></div>
+        <div class="confirm-row"><span class="confirm-key">No. HP</span><span class="confirm-val">${get(`m${i}-hp`)}</span></div>
+        <div class="confirm-row"><span class="confirm-key">Instagram</span><span class="confirm-val">${get(`m${i}-ig`)}</span></div>
+      `;
+      cfMembers.appendChild(block);
+    }
+
+    // File
+    const fileInput = document.getElementById('bukti-bayar');
+    const file = fileInput?.files[0];
+    document.getElementById('cf-file').textContent = file ? file.name : '—';
+
+    confirmOverlay.classList.add('open');
+    confirmOverlay.setAttribute('aria-hidden', 'false');
+    confirmSend.disabled = false;
+  }
+
+  function closeConfirmModal() {
+    confirmOverlay.classList.remove('open');
+    confirmOverlay.setAttribute('aria-hidden', 'true');
+  }
+
+  confirmEdit.addEventListener('click', closeConfirmModal);
+  confirmOverlay.addEventListener('click', e => {
+    if (e.target === confirmOverlay) closeConfirmModal();
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && confirmOverlay.classList.contains('open')) closeConfirmModal();
+  });
+
+  btnSubmit.addEventListener('click', () => {
     if (!validateStep3()) return;
+    openConfirmModal();
+  });
+
+  confirmSend.addEventListener('click', async () => {
+    confirmSend.disabled = true;
+    confirmSend.textContent = 'Mengirim...';
+    closeConfirmModal();
 
     btnSubmit.classList.add('loading');
     btnSubmit.disabled = true;
@@ -466,13 +591,50 @@
         formData.buktiBayar = { base64, mimeType: file.type, fileName: file.name };
       }
 
-      // Kirim ke Apps Script via fetch no-cors
+      // Kirim ke Apps Script via fetch dengan CORS
       const url = typeof APPS_SCRIPT_URL !== 'undefined' ? APPS_SCRIPT_URL : '';
       if (url) {
         const payload = new FormData();
         payload.append('data', JSON.stringify(formData));
-        fetch(url, { method: 'POST', mode: 'no-cors', body: payload })
-          .catch(err => console.warn('Fetch error (diabaikan):', err));
+
+        let berhasil = false;
+        let pesanError = 'Gagal mengirim data ke server.';
+
+        try {
+          const controller = new AbortController();
+          const timeout = setTimeout(() => controller.abort(), 15000); // timeout 15 detik
+
+          const res = await fetch(url, {
+            method: 'POST',
+            mode: 'cors',
+            body: payload,
+            signal: controller.signal,
+          });
+          clearTimeout(timeout);
+
+          const json = await res.json();
+
+          if (json.status === 'ok') {
+            berhasil = true;
+          } else {
+            pesanError = 'Server menolak data: ' + (json.message || 'Unknown error');
+          }
+        } catch (fetchErr) {
+          if (fetchErr.name === 'AbortError') {
+            pesanError = 'Koneksi timeout (15 detik). Periksa koneksi internet kamu dan coba lagi.';
+          } else {
+            pesanError = 'Gagal terhubung ke server. Periksa koneksi internet kamu.';
+          }
+        }
+
+        if (!berhasil) {
+          // Tampilkan error ke user, aktifkan kembali tombol
+          alert('❌ Pendaftaran gagal.\n\n' + pesanError + '\n\nData kamu belum masuk. Silakan coba lagi atau hubungi panitia.');
+          btnSubmit.classList.remove('loading');
+          btnSubmit.disabled = false;
+          btnBack.disabled   = false;
+          return;
+        }
       }
 
       // Tampilkan success screen
@@ -498,6 +660,8 @@
       btnSubmit.classList.remove('loading');
       btnSubmit.disabled = false;
       btnBack.disabled   = false;
+      confirmSend.disabled = false;
+      confirmSend.textContent = 'Kirim Sekarang ✓';
     }
   });
 
