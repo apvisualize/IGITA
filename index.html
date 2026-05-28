@@ -66,7 +66,7 @@
       <span class="nav-logo-text">IGITA<span class="nav-logo-year">2026</span></span>
     </div>
     <div class="nav-links">
-      <a href="#lomba">Lomba</a>
+      <a href="#concept">Konsep</a>
       <a href="#categories">Kategori</a>
       <a href="#timeline">Timeline</a>
       <a href="#rules">Ketentuan</a>
@@ -78,24 +78,23 @@
     </button>
   </nav>
 
-  <!-- Overlay di bawah mobile nav -->
-  <div class="mobile-nav-overlay" id="mobile-nav-overlay"></div>
-
   <nav class="mobile-nav" id="mobile-nav" aria-label="Navigasi Mobile" aria-hidden="true">
-    <div class="mobile-nav-links">
-      <a href="#lomba"><span class="mobile-nav-num">01</span>Lomba</a>
-      <a href="#categories"><span class="mobile-nav-num">02</span>Kategori</a>
-      <a href="#timeline"><span class="mobile-nav-num">03</span>Timeline</a>
-      <a href="#rules"><span class="mobile-nav-num">04</span>Ketentuan</a>
-      <a href="#contact"><span class="mobile-nav-num">05</span>Kontak</a>
-    </div>
-    <a href="daftar.html" class="mobile-cta">Daftar Tim →</a>
+    <button class="mobile-nav-close" id="mobile-nav-close" aria-label="Tutup menu">✕</button>
+    <a href="#concept">Konsep</a>
+    <a href="#categories">Kategori</a>
+    <a href="#timeline">Timeline</a>
+    <a href="#rules">Ketentuan</a>
+    <a href="#contact">Kontak</a>
+    <a href="daftar.html" class="mobile-cta">Daftar Tim</a>
   </nav>
 
   <main id="main-content">
     <section class="hero">
+      <div class="hero-bg-asset" aria-hidden="true">
+        <img src="asset/smart-agro.png" alt="" class="bg-agro-img">
+      </div>
       <div class="hero-content">
-        <div class="hero-badge">Informatics Group Innovation &amp; Technology Award</div>
+        <div class="hero-badge">IBIKKG Innovation and Technology Award</div>
         <h1 class="hero-title">
           <span class="line1">SMART</span>
           <span class="line2">AGRICULTURE</span>
@@ -103,13 +102,13 @@
         </h1>
         <p class="hero-sub">Kembangkan proyek atau produk digital yang menjawab tantangan pertanian modern. Kompetisi satu bulan penuh inovasi, presentasi, dan pameran karya.</p>
         <div class="hero-tags">
-          <div class="hero-tag">// Digital Project</div>
+          <div class="hero-tag">// Smart Agriculture</div>
           <div class="hero-tag">// Smart Farming</div>
           <div class="hero-tag">// Internal &amp; Eksternal</div>
           <div class="hero-tag">// Impact Driven</div>
         </div>
         <div class="hero-actions">
-          <a href="daftar.html" class="btn-primary">Daftarkan Tim →</a>
+          <a href="daftar.html" class="btn-primary">Daftar Tim</a>
           <a href="#timeline" class="btn-secondary">Lihat Jadwal ↓</a>
         </div>
       </div>
@@ -130,9 +129,9 @@
 
     <div class="divider"></div>
 
-    <section id="lomba">
+    <section id="concept">
       <div class="section-label">Tentang Acara</div>
-      <h2 class="section-title">Lomba <em>IGITA 2026</em></h2>
+      <h2 class="section-title">Inovasi <em>IGITA 2026</em></h2>
       <div class="concept-grid reveal">
         <div class="concept-card">
           <div class="icon-box">
@@ -155,11 +154,11 @@
         <div class="concept-card">
           <div class="icon-box">
             <svg class="icon-modern" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/><path d="M12 11v3"/><circle cx="12" cy="7" r="1" fill="currentColor" stroke="none"/>
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
             </svg>
           </div>
-          <div class="card-title">Kompetisi Terstruktur</div>
-          <div class="card-desc">Dua kategori terpisah dengan kuota ketat. Penilaian berbasis inovasi, kelayakan teknis, dan dampak sosial teknologi.</div>
+          <div class="card-title">Scaleable Impact</div>
+          <div class="card-desc">Fokus pada inovasi agrikultur cerdas yang dapat diskalakan. Menjawab tantangan pangan masa depan melalui teknologi.</div>
         </div>
       </div>
     </section>
@@ -170,21 +169,21 @@
       <div class="section-label">Kategori Peserta</div>
       <h2 class="section-title">Pilih <em>Jalur</em> Kompetisi</h2>
       <div class="cat-grid reveal">
-        <a href="daftar.html?kategori=internal" style="text-decoration: none; color: inherit;">
-          <div class="cat-card internal">
-            <div class="cat-badge">INTERNAL</div>
-            <div class="cat-title">Mahasiswa KKG</div>
-            <div class="cat-desc">Khusus mahasiswa aktif Kelompok Keahlian/Gerbang (KKG). Presentasi pada Day 1 (14 September).</div>
-            <div class="cat-quota">Kuota: Unlimited</div>
-          </div>
-        </a>
-
         <a href="daftar.html?kategori=external" style="text-decoration: none; color: inherit;">
           <div class="cat-card external">
             <div class="cat-badge">EKSTERNAL</div>
             <div class="cat-title">SMA / SMK Sederajat</div>
             <div class="cat-desc">Terbuka untuk pelajar tingkat menengah. Presentasi pada Day 2 (15 September) dengan standar penilaian setara.</div>
-            <div class="cat-quota">Kuota: Unlimited</div>
+            <div class="cat-quota">Kuota 10 Tim Terpilih</div>
+          </div>
+        </a>
+
+        <a href="daftar.html?kategori=internal" style="text-decoration: none; color: inherit;">
+          <div class="cat-card internal">
+            <div class="cat-badge">INTERNAL</div>
+            <div class="cat-title">Mahasiswa KKG</div>
+            <div class="cat-desc">Khusus mahasiswa aktif Kelompok Keahlian/Gerbang (KKG). Presentasi pada Day 1 (14 September).</div>
+            <div class="cat-quota">Kuota 10 Tim Terpilih</div>
           </div>
         </a>
       </div>
@@ -248,12 +247,12 @@
         <div class="rule-card">
           <div class="rule-num">01</div>
           <div class="rule-title">Komposisi Tetap</div>
-          <div class="rule-desc">Setiap tim wajib beranggotakan tepat <strong>4 orang</strong>. Tidak boleh kurang atau lebih.</div>
+          <div class="rule-desc">Setiap tim wajib beranggotakan <strong> minimal 3 orang maksimal 4 orang</strong>.</div>
         </div>
         <div class="rule-card">
           <div class="rule-num">02</div>
-          <div class="rule-title">Pendaftaran Terbuka</div>
-          <div class="rule-desc">Tidak ada batas kuota. <strong>Semua tim</strong> dari kategori Internal KKG maupun Eksternal SMA/SMK bebas mendaftar.</div>
+          <div class="rule-title">Peserta Diseleksi</div>
+          <div class="rule-desc">Peserta <strong>Diseleksi</strong> dari kategori Internal KKG maupun Eksternal SMA/SMK bebas mendaftar.</div>
         </div>
         <div class="rule-card">
           <div class="rule-num">03</div>
@@ -262,8 +261,50 @@
         </div>
         <div class="rule-card">
           <div class="rule-num">04</div>
-          <div class="rule-title">Dispensasi H-2</div>
-          <div class="rule-desc">Izin ketidakhadiran maksimal dilaporkan <strong>H-2</strong>. Tim tetap boleh presentasi minimal dengan <strong>3 orang</strong>.</div>
+          <div class="rule-title">Orisinalitas Karya</div>
+          <div class="rule-desc">Proyek harus murni buatan tim sendiri dan <strong>belum pernah menjuarai</strong> kompetisi serupa. Pelanggaran berakibat <strong>diskualifikasi</strong>.</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <section id="sponsors" class="sponsors-section">
+      <div class="section-label">Partner</div>
+      <h2 class="section-title">Disponsori <em>Oleh</em></h2>
+      
+      <div class="sponsors-premium reveal">
+        <div class="sponsor-card premium">
+          <div class="premium-glow"></div>
+          <img src="asset/logo.png" alt="Sponsor Utama" class="sponsor-img">
+          <div class="sponsor-tier">SPONSOR UTAMA</div>
+        </div>
+      </div>
+
+      <div class="sponsors-regular reveal">
+        <div class="sponsor-card">
+          <img src="asset/logo.png" alt="Sponsor" class="sponsor-img">
+        </div>
+        <div class="sponsor-card">
+          <img src="asset/logo.png" alt="Sponsor" class="sponsor-img">
+        </div>
+        <div class="sponsor-card">
+          <img src="asset/logo.png" alt="Sponsor" class="sponsor-img">
+        </div>
+        <div class="sponsor-card">
+          <img src="asset/logo.png" alt="Sponsor" class="sponsor-img">
+        </div>
+        <div class="sponsor-card">
+          <img src="asset/logo.png" alt="Sponsor" class="sponsor-img">
+        </div>
+        <div class="sponsor-card">
+          <img src="asset/logo.png" alt="Sponsor" class="sponsor-img">
+        </div>
+        <div class="sponsor-card">
+          <img src="asset/logo.png" alt="Sponsor" class="sponsor-img">
+        </div>
+        <div class="sponsor-card">
+          <img src="asset/logo.png" alt="Sponsor" class="sponsor-img">
         </div>
       </div>
     </section>
@@ -295,7 +336,7 @@
         <div class="contact-cta">
           <div class="cta-big">Siap <em>Berkarya?</em></div>
           <div class="cta-sub">Pendaftaran terbuka tanpa batas kuota. Inovasi pertanian cerdas menanti eksekusimu.</div>
-          <a href="daftar.html" class="btn-primary cta-btn">Form Pendaftaran →</a>
+          <a href="daftar.html" class="btn-primary cta-btn">Form Pendaftaran</a>
         </div>
       </div>
     </section>
@@ -307,7 +348,7 @@
       <span class="footer-logo-text">IGITA<span class="footer-logo-year">2026</span></span>
     </div>
     <div class="footer-links">
-      <a href="#lomba">Lomba</a>
+      <a href="#concept">Konsep</a>
       <a href="#categories">Kategori</a>
       <a href="#timeline">Timeline</a>
       <a href="#rules">Ketentuan</a>
