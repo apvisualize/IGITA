@@ -54,6 +54,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Nav slides up once status bar is gone; also shrink padding
     navbar.classList.toggle('scrolled', y > 60);
+
+    // Keep mobile-nav top in sync with navbar position
+    if (mobileNav) mobileNav.classList.toggle('nav-scrolled', y > 60);
   }, { passive: true });
 
   // Close mobile nav on orientation change
@@ -80,10 +83,18 @@ document.addEventListener('DOMContentLoaded', () => {
     burger.setAttribute('aria-label', 'Tutup menu navigasi');
     mobileNav.classList.add('open');
     mobileNav.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden'; // prevent background scroll
-    // Focus first link for keyboard users
+    document.body.style.overflow = 'hidden';
+    // Stagger fade-in each link after panel opens
+    mobileNav.querySelectorAll('a').forEach((link, i) => {
+      link.style.opacity = '0';
+      link.style.transition = 'none';
+      setTimeout(() => {
+        link.style.transition = `opacity 0.2s ease`;
+        link.style.opacity = '1';
+      }, 120 + i * 45);
+    });
     const firstLink = mobileNav.querySelector('a');
-    if (firstLink) firstLink.focus();
+    if (firstLink) setTimeout(() => firstLink.focus(), 100);
   }
 
   function closeMenu() {
@@ -92,7 +103,12 @@ document.addEventListener('DOMContentLoaded', () => {
     mobileNav.classList.remove('open');
     mobileNav.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
-    burger.focus(); // return focus to trigger
+    // Reset stagger styles
+    mobileNav.querySelectorAll('a').forEach(link => {
+      link.style.opacity = '';
+      link.style.transition = '';
+    });
+    burger.focus();
   }
 
   // Close button inside mobile nav
