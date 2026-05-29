@@ -1635,3 +1635,301 @@ body.reg-page .reg-close { display: none !important; }
   .confirm-modal { border-radius: 8px; }
   .confirm-row { gap: 8px; }
 }
+/* ============================================================
+   QRIS PAYMENT BLOCK — IGITA 2026
+   ============================================================ */
+
+.qris-block {
+  background: linear-gradient(135deg, rgba(0,212,255,0.05) 0%, rgba(6,182,212,0.03) 100%);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: 18px;
+  padding: 22px;
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle background glow pulse */
+.qris-block::before {
+  content: '';
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 160px; height: 160px;
+  background: radial-gradient(circle, rgba(0,212,255,0.1) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: qrisGlowPulse 4s ease-in-out infinite;
+}
+
+@keyframes qrisGlowPulse {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50%       { opacity: 1;   transform: scale(1.15); }
+}
+
+/* ── Inner row: QR + info ── */
+.qris-inner {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── QR Wrap (column) ── */
+.qris-qr-wrap {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ── Styled Frame around the QR ── */
+.qris-frame-outer {
+  position: relative;
+  width: 168px;
+  padding: 10px;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow:
+    0 0 0 1px rgba(0, 212, 255, 0.35),
+    0 0 16px rgba(0, 212, 255, 0.2),
+    0 0 40px rgba(0, 212, 255, 0.08),
+    0 4px 20px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+/* Animated gradient border ring */
+.qris-frame-outer::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 16px;
+  background: linear-gradient(135deg,
+    #00d4ff 0%,
+    #06b6d4 25%,
+    #0891b2 50%,
+    #00d4ff 75%,
+    #38bdf8 100%
+  );
+  background-size: 300% 300%;
+  animation: qrisBorderSpin 4s linear infinite;
+  z-index: -1;
+}
+
+@keyframes qrisBorderSpin {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Corner accent brackets */
+.qris-frame-corner {
+  position: absolute;
+  width: 16px; height: 16px;
+  border-color: #00d4ff;
+  border-style: solid;
+  z-index: 2;
+}
+.qris-fc-tl { top: 6px;  left: 6px;  border-width: 2.5px 0 0 2.5px; border-radius: 3px 0 0 0; }
+.qris-fc-tr { top: 6px;  right: 6px; border-width: 2.5px 2.5px 0 0; border-radius: 0 3px 0 0; }
+.qris-fc-bl { bottom: 6px; left: 6px;  border-width: 0 0 2.5px 2.5px; border-radius: 0 0 0 3px; }
+.qris-fc-br { bottom: 6px; right: 6px; border-width: 0 2.5px 2.5px 0; border-radius: 0 0 3px 0; }
+
+/* QRIS badge pill at top */
+.qris-frame-badge {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: linear-gradient(90deg, #0891b2, #00d4ff);
+  color: #fff;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 20px;
+  margin-bottom: 6px;
+  box-shadow: 0 2px 8px rgba(0, 212, 255, 0.35);
+}
+.qris-frame-badge svg { color: #fff; opacity: 0.9; }
+
+/* The actual QR image — keep black/white, just size it */
+.qris-img {
+  width: 140px;
+  height: 140px;
+  object-fit: contain;
+  display: block;
+  border-radius: 4px;
+  /* NO color filters — keeps QR scannable */
+}
+
+/* Bottom strip */
+.qris-frame-bottom {
+  margin-top: 6px;
+  width: 100%;
+  background: linear-gradient(90deg, #0891b2, #00d4ff);
+  border-radius: 0 0 4px 4px;
+  padding: 4px 0;
+  text-align: center;
+}
+.qris-frame-label {
+  font-family: 'Syne', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+/* Scan hint below frame */
+.qris-scan-hint {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  color: rgba(0, 212, 255, 0.75);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  animation: qrisScanPulse 2.5s ease-in-out infinite;
+}
+.qris-scan-hint svg { color: rgba(0, 212, 255, 0.75); }
+
+@keyframes qrisScanPulse {
+  0%, 100% { opacity: 0.6; }
+  50%       { opacity: 1; }
+}
+
+/* ── Info column ── */
+.qris-info-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.qris-owner-label,
+.qris-amount-label,
+.qris-steps-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(224, 231, 255, 0.4);
+  margin-top: 12px;
+}
+.qris-owner-label { margin-top: 0; }
+
+.qris-owner-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  background: linear-gradient(90deg, #00d4ff, #38bdf8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 0.06em;
+}
+
+.qris-amount-val {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: rgba(224, 231, 255, 0.75);
+}
+
+.qris-steps-list {
+  list-style: none;
+  padding: 0;
+  margin: 5px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  counter-reset: qris-step;
+}
+
+.qris-steps-list li {
+  counter-increment: qris-step;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  color: rgba(224, 231, 255, 0.7);
+  line-height: 1.45;
+}
+
+.qris-steps-list li::before {
+  content: counter(qris-step);
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  background: linear-gradient(135deg, rgba(0,212,255,0.2), rgba(6,182,212,0.1));
+  border: 1px solid rgba(0, 212, 255, 0.35);
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  color: #00d4ff;
+  line-height: 1;
+}
+
+/* ── Alert boxes ── */
+.qris-label-alert,
+.qris-photo-alert {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12.5px;
+  line-height: 1.55;
+  position: relative;
+  z-index: 1;
+}
+
+.qris-label-alert {
+  background: rgba(6, 182, 212, 0.07);
+  border: 1px solid rgba(6, 182, 212, 0.22);
+  color: rgba(224, 231, 255, 0.82);
+}
+.qris-label-alert svg { color: #06b6d4; flex-shrink: 0; margin-top: 2px; }
+
+.qris-photo-alert {
+  background: rgba(251, 191, 36, 0.06);
+  border: 1px solid rgba(251, 191, 36, 0.22);
+  color: rgba(224, 231, 255, 0.82);
+}
+.qris-photo-alert svg { color: #fbbf24; flex-shrink: 0; margin-top: 2px; }
+
+.qris-label-alert strong,
+.qris-photo-alert strong { color: #e0e7ff; }
+
+/* ── Mobile ── */
+@media (max-width: 540px) {
+  .qris-inner {
+    flex-direction: column;
+    align-items: center;
+  }
+  .qris-frame-outer {
+    width: 200px;
+    padding: 12px;
+  }
+  .qris-img {
+    width: 168px;
+    height: 168px;
+  }
+  .qris-info-col { width: 100%; }
+  .qris-owner-label { margin-top: 0; }
+}
