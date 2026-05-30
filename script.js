@@ -77,12 +77,14 @@ document.addEventListener('DOMContentLoaded', () => {
   // ============================================================
   const burger    = document.getElementById('nav-burger');
   const mobileNav = document.getElementById('mobile-nav');
+  const backdrop  = document.getElementById('mobile-nav-backdrop');
 
   function openMenu() {
     burger.setAttribute('aria-expanded', 'true');
     burger.setAttribute('aria-label', 'Tutup menu navigasi');
     mobileNav.classList.add('open');
     mobileNav.setAttribute('aria-hidden', 'false');
+    if (backdrop) backdrop.classList.add('active');
     document.body.style.overflow = 'hidden';
     // Stagger fade-in each link after panel opens
     mobileNav.querySelectorAll('a').forEach((link, i) => {
@@ -102,6 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
     burger.setAttribute('aria-label', 'Buka menu navigasi');
     mobileNav.classList.remove('open');
     mobileNav.setAttribute('aria-hidden', 'true');
+    if (backdrop) backdrop.classList.remove('active');
     document.body.style.overflow = '';
     // Reset stagger styles
     mobileNav.querySelectorAll('a').forEach(link => {
@@ -134,6 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
   mobileNav.addEventListener('click', e => {
     if (e.target === mobileNav) closeMenu();
   });
+  if (backdrop) backdrop.addEventListener('click', closeMenu);
 
   // ============================================================
   // COUNTDOWN — Otomatis berganti target sesuai fase IGITA 2026
