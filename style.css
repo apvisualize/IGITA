@@ -437,7 +437,7 @@ nav.scrolled { top: 0; padding: 12px var(--side-pad); background: rgba(6,8,15,0.
   margin-bottom: 24px; animation: fadeUp 0.6s ease both;
   white-space: normal; max-width: 100%; line-height: 1.4;
 }
-.hero-badge::before { content: '→'; flex-shrink: 0; margin-top: 1px; }
+.hero-badge::before { content: '→'; flex-shrink: 0; margin-top: -1px; }
 
 .hero-title {
   font-family: 'Syne', sans-serif; font-size: clamp(2.8rem, 7vw, 4.5rem);
