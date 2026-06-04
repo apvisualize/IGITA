@@ -185,22 +185,32 @@
     });
   }
 
-  // File upload feedback
-  function setupFileInput() {
-    const fileInput = document.getElementById('bukti-bayar');
+  // File proposal feedback
+  function isValidProposal(file) {
+    if (!file) return { ok: false, msg: 'File proposal wajib diunggah.' };
+    if (file.type !== 'application/pdf') return { ok: false, msg: 'Format file tidak valid. Gunakan PDF.' };
+    if (file.size > 10 * 1024 * 1024) return { ok: false, msg: 'Ukuran file melebihi 10MB. Kompres atau pilih file lain.' };
+    return { ok: true };
+  }
+
+  function setupProposalInput() {
+    const fileInput = document.getElementById('proposal-file');
+    const nameDisp  = document.getElementById('proposal-file-name');
     const helper    = fileInput?.closest('.form-group')?.querySelector('.form-helper');
     if (!fileInput) return;
     fileInput.addEventListener('change', () => {
       const file   = fileInput.files[0];
-      const result = isValidFile(file);
+      const result = isValidProposal(file);
+      if (nameDisp) nameDisp.textContent = file ? file.name : 'Belum ada file dipilih';
       if (!result.ok) {
-        showErr('err-bukti-bayar', true, result.msg);
-        setInputErr('bukti-bayar', true);
-        if (helper) { helper.textContent = 'Format: JPG, PNG, atau PDF. Maksimal 2MB.'; helper.style.color = ''; }
+        showErr('err-proposal-file', true, result.msg);
+        setInputErr('proposal-file', true);
+        if (helper) { helper.textContent = 'Format: PDF · Maks. 10MB.'; helper.style.color = ''; }
         fileInput.value = '';
+        if (nameDisp) nameDisp.textContent = 'Belum ada file dipilih';
       } else {
-        showErr('err-bukti-bayar', false);
-        setInputErr('bukti-bayar', false);
+        showErr('err-proposal-file', false);
+        setInputErr('proposal-file', false);
         const kb = (file.size / 1024).toFixed(0);
         if (helper) {
           helper.textContent = '✓ ' + file.name + ' (' + kb + ' KB)';
@@ -212,13 +222,19 @@
 
   // Inisialisasi semua real-time input setup
   function initInputSetup() {
-    for (let i = 1; i <= 5; i++) {
+    // Ketua dan Wakil: semua field
+    for (let i = 1; i <= 2; i++) {
       setupNamaInput(`m${i}-nama`);
       setupEmailInput(`m${i}-email`);
       setupHPInput(`m${i}-hp`);
       setupIGInput(`m${i}-ig`);
     }
-    setupFileInput();
+    // Anggota 3-4: hanya nama dan instagram
+    for (let i = 3; i <= 4; i++) {
+      setupNamaInput(`m${i}-nama`);
+      setupIGInput(`m${i}-ig`);
+    }
+    setupProposalInput();
   }
 
   // ============================================================
@@ -281,53 +297,33 @@
     let ok = true;
     let firstErrEl = null;
 
-    const members = [
-      { id: 1, req: true },
-      { id: 2, req: true },
-      { id: 3, req: true },
-      { id: 4, req: true },
-      { id: 5, req: false },
-    ];
-
-    members.forEach(m => {
-      const namId = `m${m.id}-nama`;
-      const emId  = `m${m.id}-email`;
-      const hpId  = `m${m.id}-hp`;
-      const igId  = `m${m.id}-ig`;
+    // --- Anggota 1 (Ketua) & 2 (Wakil): wajib semua field ---
+    [1, 2].forEach(i => {
+      const namId = `m${i}-nama`;
+      const emId  = `m${i}-email`;
+      const hpId  = `m${i}-hp`;
+      const igId  = `m${i}-ig`;
 
       const namVal = document.getElementById(namId)?.value.trim() || '';
       const emVal  = document.getElementById(emId)?.value.trim()  || '';
       const hpVal  = document.getElementById(hpId)?.value.trim()  || '';
       const igVal  = document.getElementById(igId)?.value.trim()  || '';
 
-      // Cadangan: kalau semua kosong, skip
-      if (!m.req && !namVal && !emVal && !hpVal && !igVal) {
-        [namId, emId, hpId, igId].forEach(id => {
-          setInputErr(id, false); setInputOk(id, false);
-          showErr(`err-${id}`, false);
-        });
-        return;
-      }
-
-      // Nama
       const badNam = !isValidNama(namVal);
       setInputErr(namId, badNam); setInputOk(namId, !badNam);
       showErr(`err-${namId}`, badNam, badNam ? ERR_MSG.nama : '');
       if (badNam) { ok = false; if (!firstErrEl) firstErrEl = document.getElementById(namId); }
 
-      // Email
       const badEm = !isValidEmail(emVal);
       setInputErr(emId, badEm); setInputOk(emId, !badEm);
       showErr(`err-${emId}`, badEm, badEm ? ERR_MSG.email : '');
       if (badEm) { ok = false; if (!firstErrEl) firstErrEl = document.getElementById(emId); }
 
-      // HP
       const badHp = !isValidHP(hpVal);
       setInputErr(hpId, badHp); setInputOk(hpId, !badHp);
       showErr(`err-${hpId}`, badHp, badHp ? ERR_MSG.hp : '');
       if (badHp) { ok = false; if (!firstErrEl) firstErrEl = document.getElementById(hpId); }
 
-      // Instagram — auto-add @ jika belum ada sebelum validasi
       let igFinal = igVal;
       if (igFinal.length > 0 && !igFinal.startsWith('@')) {
         igFinal = '@' + igFinal;
@@ -340,70 +336,94 @@
       if (badIg) { ok = false; if (!firstErrEl) firstErrEl = document.getElementById(igId); }
     });
 
-    // ---- Cek duplikat email antar anggota ----
-    let firstDupEl = null;
-    const emailVals = [];
-    members.forEach(m => {
-      const val = document.getElementById(`m${m.id}-email`)?.value.trim().toLowerCase() || '';
-      if (val) emailVals.push({ id: m.id, val });
-    });
-    emailVals.forEach((a, i) => {
-      emailVals.forEach((b, j) => {
-        if (i !== j && a.val && a.val === b.val) {
-          const id = `m${a.id}-email`;
-          const el = document.getElementById(id);
-          setInputErr(id, true); setInputOk(id, false);
-          showErr(`err-${id}`, true, `Email sama dengan Anggota ${b.id}. Tiap anggota wajib pakai email berbeda.`);
-          ok = false;
-          if (!firstDupEl) firstDupEl = el;
-        }
-      });
-    });
+    // --- Anggota 3: wajib (hanya nama + instagram) ---
+    {
+      const namId = 'm3-nama'; const igId = 'm3-ig';
+      const namVal = document.getElementById(namId)?.value.trim() || '';
+      const igVal  = document.getElementById(igId)?.value.trim()  || '';
 
-    // ---- Cek duplikat HP antar anggota ----
-    const hpVals = [];
-    members.forEach(m => {
-      const val = document.getElementById(`m${m.id}-hp`)?.value.trim().replace(/[\s\-]/g, '') || '';
-      if (val) hpVals.push({ id: m.id, val });
-    });
-    hpVals.forEach((a, i) => {
-      hpVals.forEach((b, j) => {
-        if (i !== j && a.val && a.val === b.val) {
-          const id = `m${a.id}-hp`;
-          const el = document.getElementById(id);
-          setInputErr(id, true); setInputOk(id, false);
-          showErr(`err-${id}`, true, `No. HP sama dengan Anggota ${b.id}. Tiap anggota wajib pakai nomor berbeda.`);
-          ok = false;
-          if (!firstDupEl) firstDupEl = el;
-        }
-      });
-    });
+      const badNam = !isValidNama(namVal);
+      setInputErr(namId, badNam); setInputOk(namId, !badNam);
+      showErr(`err-${namId}`, badNam, badNam ? ERR_MSG.nama : '');
+      if (badNam) { ok = false; if (!firstErrEl) firstErrEl = document.getElementById(namId); }
 
-    // ---- Cek duplikat Instagram antar anggota ----
-    const igVals = [];
-    members.forEach(m => {
-      const val = document.getElementById(`m${m.id}-ig`)?.value.trim().toLowerCase() || '';
-      if (val) igVals.push({ id: m.id, val });
-    });
-    igVals.forEach((a, i) => {
-      igVals.forEach((b, j) => {
-        if (i !== j && a.val && a.val === b.val) {
-          const id = `m${a.id}-ig`;
-          const el = document.getElementById(id);
-          setInputErr(id, true); setInputOk(id, false);
-          showErr(`err-${id}`, true, `Akun Instagram sama dengan Anggota ${b.id}. Tiap anggota wajib pakai akun berbeda.`);
-          ok = false;
-          if (!firstDupEl) firstDupEl = el;
-        }
-      });
-    });
-
-    // Scroll ke field pertama yang error — duplikat diprioritaskan
-    const scrollTarget = firstDupEl || firstErrEl;
-    if (scrollTarget) {
-      scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      scrollTarget.focus();
+      let igFinal = igVal;
+      if (igFinal.length > 0 && !igFinal.startsWith('@')) {
+        igFinal = '@' + igFinal;
+        const igEl = document.getElementById(igId);
+        if (igEl) igEl.value = igFinal;
+      }
+      const badIg = !isValidIG(igFinal);
+      setInputErr(igId, badIg); setInputOk(igId, !badIg);
+      showErr(`err-${igId}`, badIg, badIg ? ERR_MSG.ig : '');
+      if (badIg) { ok = false; if (!firstErrEl) firstErrEl = document.getElementById(igId); }
     }
+
+    // --- Anggota 4: opsional — skip jika kosong, validasi jika diisi ---
+    {
+      const namId = 'm4-nama'; const igId = 'm4-ig';
+      const namVal = document.getElementById(namId)?.value.trim() || '';
+      const igVal  = document.getElementById(igId)?.value.trim()  || '';
+
+      if (namVal || igVal) {
+        const badNam = !isValidNama(namVal);
+        setInputErr(namId, badNam); setInputOk(namId, !badNam);
+        showErr(`err-${namId}`, badNam, badNam ? ERR_MSG.nama : '');
+        if (badNam) { ok = false; if (!firstErrEl) firstErrEl = document.getElementById(namId); }
+
+        let igFinal = igVal;
+        if (igFinal.length > 0 && !igFinal.startsWith('@')) {
+          igFinal = '@' + igFinal;
+          const igEl = document.getElementById(igId);
+          if (igEl) igEl.value = igFinal;
+        }
+        if (igFinal) {
+          const badIg = !isValidIG(igFinal);
+          setInputErr(igId, badIg); setInputOk(igId, !badIg);
+          showErr(`err-${igId}`, badIg, badIg ? ERR_MSG.ig : '');
+          if (badIg) { ok = false; if (!firstErrEl) firstErrEl = document.getElementById(igId); }
+        }
+      } else {
+        [namId, igId].forEach(id => { setInputErr(id, false); setInputOk(id, false); showErr(`err-${id}`, false); });
+      }
+    }
+
+    // ---- Cek duplikat email (Ketua & Wakil saja) ----
+    let firstDupEl = null;
+    const emailVals = [1, 2].map(i => ({ id: i, val: document.getElementById(`m${i}-email`)?.value.trim().toLowerCase() || '' })).filter(e => e.val);
+    emailVals.forEach((a, i) => emailVals.forEach((b, j) => {
+      if (i !== j && a.val === b.val) {
+        const id = `m${a.id}-email`;
+        setInputErr(id, true); setInputOk(id, false);
+        showErr(`err-${id}`, true, `Email sama dengan Anggota ${b.id}. Pakai email berbeda.`);
+        ok = false; if (!firstDupEl) firstDupEl = document.getElementById(id);
+      }
+    }));
+
+    // ---- Cek duplikat HP (Ketua & Wakil saja) ----
+    const hpVals = [1, 2].map(i => ({ id: i, val: document.getElementById(`m${i}-hp`)?.value.trim().replace(/[\s\-]/g, '') || '' })).filter(h => h.val);
+    hpVals.forEach((a, i) => hpVals.forEach((b, j) => {
+      if (i !== j && a.val === b.val) {
+        const id = `m${a.id}-hp`;
+        setInputErr(id, true); setInputOk(id, false);
+        showErr(`err-${id}`, true, `No. HP sama dengan Anggota ${b.id}. Pakai nomor berbeda.`);
+        ok = false; if (!firstDupEl) firstDupEl = document.getElementById(id);
+      }
+    }));
+
+    // ---- Cek duplikat Instagram (semua anggota) ----
+    const igVals = [1, 2, 3, 4].map(i => ({ id: i, val: document.getElementById(`m${i}-ig`)?.value.trim().toLowerCase() || '' })).filter(g => g.val);
+    igVals.forEach((a, i) => igVals.forEach((b, j) => {
+      if (i !== j && a.val === b.val) {
+        const id = `m${a.id}-ig`;
+        setInputErr(id, true); setInputOk(id, false);
+        showErr(`err-${id}`, true, `Akun Instagram sama dengan Anggota ${b.id}. Pakai akun berbeda.`);
+        ok = false; if (!firstDupEl) firstDupEl = document.getElementById(id);
+      }
+    }));
+
+    const scrollTarget = firstDupEl || firstErrEl;
+    if (scrollTarget) { scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'center' }); scrollTarget.focus(); }
 
     return ok;
   }
@@ -411,11 +431,11 @@
   function validateStep3() {
     let ok = true;
 
-    const fileInput = document.getElementById('bukti-bayar');
+    const fileInput = document.getElementById('proposal-file');
     const file      = fileInput?.files[0];
-    const fileCheck = isValidFile(file);
-    setInputErr('bukti-bayar', !fileCheck.ok);
-    showErr('err-bukti-bayar', !fileCheck.ok, fileCheck.msg || '');
+    const fileCheck = isValidProposal(file);
+    setInputErr('proposal-file', !fileCheck.ok);
+    showErr('err-proposal-file', !fileCheck.ok, fileCheck.msg || '');
     if (!fileCheck.ok) ok = false;
 
     const agreed = document.getElementById('agree-check').checked;
@@ -501,8 +521,8 @@
     // Render anggota
     const cfMembers = document.getElementById('cf-members');
     cfMembers.innerHTML = '';
-    const labels = ['Anggota 1 (Ketua)', 'Anggota 2', 'Anggota 3', 'Anggota 4', 'Anggota 5 (Cadangan)'];
-    for (let i = 1; i <= 5; i++) {
+    const labels = ['Anggota 1 (Ketua)', 'Anggota 2 (Wakil)', 'Anggota 3', 'Anggota 4'];
+    for (let i = 1; i <= 4; i++) {
       const nama = get(`m${i}-nama`);
       if (!nama) continue;
       const block = document.createElement('div');
@@ -518,7 +538,7 @@
     }
 
     // File
-    const fileInput = document.getElementById('bukti-bayar');
+    const fileInput = document.getElementById('proposal-file');
     const file = fileInput?.files[0];
     document.getElementById('cf-file').textContent = file ? file.name : '—';
 
@@ -570,16 +590,12 @@
         a1_hp    : get('m1-hp'),    a1_ig    : get('m1-ig'),
         a2_nama  : get('m2-nama'),  a2_email : get('m2-email'),
         a2_hp    : get('m2-hp'),    a2_ig    : get('m2-ig'),
-        a3_nama  : get('m3-nama'),  a3_email : get('m3-email'),
-        a3_hp    : get('m3-hp'),    a3_ig    : get('m3-ig'),
-        a4_nama  : get('m4-nama'),  a4_email : get('m4-email'),
-        a4_hp    : get('m4-hp'),    a4_ig    : get('m4-ig'),
-        a5_nama  : get('m5-nama'),  a5_email : get('m5-email'),
-        a5_hp    : get('m5-hp'),    a5_ig    : get('m5-ig'),
+        a3_nama  : get('m3-nama'),  a3_ig    : get('m3-ig'),
+        a4_nama  : get('m4-nama'),  a4_ig    : get('m4-ig'),
       };
 
-      // Bukti bayar ke base64
-      const fileInput = document.getElementById('bukti-bayar');
+      // Proposal ke base64
+      const fileInput = document.getElementById('proposal-file');
       const file = fileInput?.files[0];
       if (file) {
         const base64 = await new Promise((res, rej) => {
@@ -686,8 +702,10 @@
       i.classList.remove('error', 'valid');
     });
     document.getElementById('agree-wrap').style.borderColor = '';
-    const helper = document.querySelector('#bukti-bayar ~ .form-helper, #bukti-bayar + .form-helper');
-    if (helper) { helper.textContent = 'Format: JPG, PNG, atau PDF. Maksimal 2MB.'; helper.style.color = ''; }
+    const helper = document.querySelector('#proposal-file ~ .form-helper, #proposal-file + .form-helper');
+    if (helper) { helper.textContent = 'Format: PDF · Maks. 10MB · Gunakan template proposal resmi IGITA 2026.'; helper.style.color = ''; }
+    const proposalName = document.getElementById('proposal-file-name');
+    if (proposalName) proposalName.textContent = 'Belum ada file dipilih';
     btnSubmit.classList.remove('loading');
     btnSubmit.disabled = false;
     btnBack.disabled   = false;
@@ -716,11 +734,5 @@
   updateStepUI();
 
   // File upload nama file display
-  const buktiInput = document.getElementById('bukti-bayar');
-  const fileNameDisplay = document.getElementById('file-name-display');
-  if (buktiInput && fileNameDisplay) {
-    buktiInput.addEventListener('change', function() {
-      fileNameDisplay.textContent = this.files[0] ? this.files[0].name : 'Belum ada file dipilih';
-    });
-  }
+  // proposal file name display handled by setupProposalInput
 })();

@@ -55,7 +55,7 @@
         <div class="step-connector" id="conn-2-3"></div>
         <div class="reg-step" data-step="3">
           <div class="step-num">3</div>
-          <div class="step-label">Pembayaran & Kirim</div>
+          <div class="step-label">Proposal & Kirim</div>
         </div>
       </div>
 
@@ -155,7 +155,7 @@
           <!-- Anggota 2 -->
           <div class="member-card">
             <div class="member-card-header">
-              <div class="member-badge">Anggota 2</div>
+              <div class="member-badge">Wakil Tim</div>
             </div>
             <div class="form-row">
               <div class="form-group">
@@ -195,18 +195,6 @@
                 <div class="form-error" id="err-m3-nama">Nama lengkap wajib diisi.</div>
               </div>
               <div class="form-group">
-                <label class="form-label" for="m3-email">Email Aktif <span class="req">*</span></label>
-                <input type="email" class="form-input" id="m3-email" placeholder="email@domain.com">
-                <div class="form-error" id="err-m3-email">Email valid wajib diisi.</div>
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label class="form-label" for="m3-hp">No. HP / WA <span class="req">*</span></label>
-                <input type="tel" class="form-input" id="m3-hp" placeholder="08xxxxxxxxxx">
-                <div class="form-error" id="err-m3-hp">Nomor HP wajib diisi.</div>
-              </div>
-              <div class="form-group">
                 <label class="form-label" for="m3-ig">User Instagram <span class="req">*</span></label>
                 <input type="text" class="form-input" id="m3-ig" placeholder="@username (untuk Twibbon)">
                 <div class="form-error" id="err-m3-ig">User Instagram wajib diisi.</div>
@@ -217,159 +205,55 @@
           <!-- Anggota 4 -->
           <div class="member-card">
             <div class="member-card-header">
-              <div class="member-badge">Anggota 4</div>
+              <div class="member-badge">Anggota 4 <span style="font-size:0.7em;opacity:0.6;font-weight:400">(opsional)</span></div>
             </div>
             <div class="form-row">
               <div class="form-group">
-                <label class="form-label" for="m4-nama">Nama Lengkap <span class="req">*</span></label>
+                <label class="form-label" for="m4-nama">Nama Lengkap</label>
                 <input type="text" class="form-input" id="m4-nama" placeholder="Nama sesuai identitas">
                 <div class="form-error" id="err-m4-nama">Nama lengkap wajib diisi.</div>
               </div>
               <div class="form-group">
-                <label class="form-label" for="m4-email">Email Aktif <span class="req">*</span></label>
-                <input type="email" class="form-input" id="m4-email" placeholder="email@domain.com">
-                <div class="form-error" id="err-m4-email">Email valid wajib diisi.</div>
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label class="form-label" for="m4-hp">No. HP / WA <span class="req">*</span></label>
-                <input type="tel" class="form-input" id="m4-hp" placeholder="08xxxxxxxxxx">
-                <div class="form-error" id="err-m4-hp">Nomor HP wajib diisi.</div>
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="m4-ig">User Instagram <span class="req">*</span></label>
+                <label class="form-label" for="m4-ig">User Instagram</label>
                 <input type="text" class="form-input" id="m4-ig" placeholder="@username (untuk Twibbon)">
                 <div class="form-error" id="err-m4-ig">User Instagram wajib diisi.</div>
               </div>
             </div>
           </div>
 
-          <!-- Anggota 5 -->
-          <div class="member-card">
-            <div class="member-card-header">
-              <div class="member-badge cadangan">Anggota Cadangan</div>
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label class="form-label" for="m5-nama">Nama Lengkap </label>
-                <input type="text" class="form-input" id="m5-nama" placeholder="Nama sesuai identitas">
-                <div class="form-error" id="err-m5-nama">Nama lengkap wajib diisi.</div>
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="m5-email">Email Aktif </label>
-                <input type="email" class="form-input" id="m5-email" placeholder="email@domain.com">
-                <div class="form-error" id="err-m5-email">Email valid wajib diisi.</div>
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label class="form-label" for="m5-hp">No. HP / WA </label>
-                <input type="tel" class="form-input" id="m5-hp" placeholder="08xxxxxxxxxx">
-                <div class="form-error" id="err-m5-hp">Nomor HP wajib diisi.</div>
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="m5-ig">User Instagram </label>
-                <input type="text" class="form-input" id="m5-ig" placeholder="@username (untuk Twibbon)">
-                <div class="form-error" id="err-m5-ig">User Instagram wajib diisi.</div>
-              </div>
-            </div>
-          </div>
 
         </div>
 
-        <!-- STEP 3: Pembayaran -->
+        <!-- STEP 3: Proposal -->
         <div class="reg-panel" id="panel-3">
           <div class="form-section-title" style="margin-top:0">
             <span class="sec-num">04</span>
-            Pembayaran via QRIS
+            Upload Proposal
           </div>
 
-          <!-- QRIS Block -->
-          <div class="qris-block">
-            <div class="qris-inner">
-              <!-- QR Code -->
-              <div class="qris-qr-wrap">
-                <div class="qris-frame-outer">
-                  <div class="qris-frame-corner qris-fc-tl"></div>
-                  <div class="qris-frame-corner qris-fc-tr"></div>
-                  <div class="qris-frame-corner qris-fc-bl"></div>
-                  <div class="qris-frame-corner qris-fc-br"></div>
-                  <div class="qris-frame-badge">
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="4" height="4"/></svg>
-                    QRIS
-                  </div>
-                  <img src="asset/QRIS.jpeg" alt="QRIS IGITA 2026" class="qris-img">
-                  <div class="qris-frame-bottom">
-                    <span class="qris-frame-label">IGITA 2026</span>
-                  </div>
-                </div>
-                <div class="qris-scan-hint">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9V5a2 2 0 0 1 2-2h4"/><path d="M15 3h4a2 2 0 0 1 2 2v4"/><path d="M21 15v4a2 2 0 0 1-2 2h-4"/><path d="M9 21H5a2 2 0 0 1-2-2v-4"/></svg>
-                  Arahkan kamera untuk scan
-                </div>
-              </div>
-              <!-- Info Samping -->
-              <div class="qris-info-col">
-                <div class="qris-owner-label">Atas Nama</div>
-                <div class="qris-owner-name">IGITA</div>
-                <div class="qris-amount-label">Nominal Pembayaran</div>
-                <div class="qris-amount-val">Rp 100.000,00</div>
-                <div class="qris-steps-label">Cara Bayar</div>
-                <ol class="qris-steps-list">
-                  <li>Buka aplikasi dompet digital / m-banking</li>
-                  <li>Pilih fitur <strong>Scan QR / QRIS</strong></li>
-                  <li>Arahkan kamera ke QR di atas</li>
-                  <li>Masukkan nominal, lalu konfirmasi</li>
-                  <li>Simpan <strong>bukti transfer tanpa di-crop</strong></li>
-                </ol>
-              </div>
-            </div>
-
-            <!-- Alert Label Nama Tim -->
-            <div class="qris-label-alert">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
-              <div>
-                Saat melakukan pembayaran, isikan <strong>nama tim kamu</strong> pada kolom
-                <strong>catatan / berita transfer</strong> (jika tersedia di aplikasi kamu).
-                Ini membantu kami memverifikasi pembayaran dengan lebih cepat.
-              </div>
-            </div>
-
-            <!-- Warning Bukti -->
-            <div class="qris-photo-alert">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-              <div>
-                <strong>Penting:</strong> Upload bukti pembayaran <strong>tanpa di-crop</strong> — tampilkan
-                seluruh layar transaksi (nominal, nama penerima, tanggal &amp; jam, dan status berhasil).
-                Bukti yang di-crop tidak akan diproses.
-              </div>
-            </div>
+          <div class="quota-info">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+            <div class="quota-info-text">Upload proposal timmu dalam format <strong>PDF</strong>. Gunakan template proposal resmi IGITA 2026 yang bisa diunduh di halaman utama. Pastikan proposal sudah lengkap sebelum dikirim.</div>
           </div>
 
-          <!-- Upload Bukti -->
-          <div class="form-section-title">
-            <span class="sec-num">05</span>
-            Upload Bukti Pembayaran
-          </div>
           <div class="form-row single">
             <div class="form-group">
-              <label class="form-label" for="bukti-bayar">Bukti Transfer / Screenshot <span class="req">*</span></label>
+              <label class="form-label" for="proposal-file">File Proposal (PDF) <span class="req">*</span></label>
               <div class="file-upload-wrap">
-                <input type="file" id="bukti-bayar" accept="image/*,application/pdf" class="file-input-hidden">
-                <label for="bukti-bayar" class="file-upload-btn">
+                <input type="file" id="proposal-file" accept="application/pdf" class="file-input-hidden">
+                <label for="proposal-file" class="file-upload-btn">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                  Upload File
+                  Upload PDF
                 </label>
-                <span class="file-upload-name" id="file-name-display">Belum ada file dipilih</span>
+                <span class="file-upload-name" id="proposal-file-name">Belum ada file dipilih</span>
               </div>
-              <div class="form-helper">Format: JPG, PNG, atau PDF · Maks. 2MB · Tanpa crop, tampilkan seluruh layar transaksi.</div>
-              <div class="form-error" id="err-bukti-bayar">Bukti pembayaran wajib diunggah.</div>
+              <div class="form-helper">Format: PDF · Maks. 10MB · Gunakan template proposal resmi IGITA 2026.</div>
+              <div class="form-error" id="err-proposal-file">File proposal wajib diunggah.</div>
             </div>
           </div>
 
           <div class="form-section-title">
-            <span class="sec-num">06</span>
+            <span class="sec-num">05</span>
             Persetujuan &amp; Pengiriman
           </div>
 
@@ -470,7 +354,7 @@
         <div class="confirm-section-label" style="margin-top:16px">// Anggota Tim</div>
         <div id="cf-members"></div>
 
-        <div class="confirm-section-label" style="margin-top:16px">// Bukti Pembayaran</div>
+        <div class="confirm-section-label" style="margin-top:16px">// Proposal</div>
         <div class="confirm-row"><span class="confirm-key">File</span><span class="confirm-val" id="cf-file">—</span></div>
       </div>
       <div class="confirm-footer">

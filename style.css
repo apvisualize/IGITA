@@ -646,6 +646,100 @@ section {
 .sponsors-regular .sponsor-card:hover .sponsor-img { filter: grayscale(0%) brightness(100%); }
 
 /* ============================================================
+   DOWNLOADS
+   ============================================================ */
+.downloads-section { }
+.downloads-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-top: 48px;
+}
+.download-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 24px 28px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg2);
+  transition: border-color 0.2s, transform 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.download-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(0,212,255,0.04) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+.download-card:hover { border-color: rgba(0,212,255,0.35); transform: translateY(-2px); }
+.download-card:hover::before { opacity: 1; }
+.download-icon {
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  background: rgba(0,212,255,0.08);
+  border: 1px solid rgba(0,212,255,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+}
+.download-content { flex: 1; min-width: 0; }
+.download-badge {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  background: rgba(0,212,255,0.1);
+  border: 1px solid rgba(0,212,255,0.25);
+  border-radius: 4px;
+  padding: 2px 7px;
+  margin-bottom: 8px;
+}
+.download-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 5px;
+  color: var(--text);
+}
+.download-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
+.download-btn {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 18px;
+  border-radius: 8px;
+  background: rgba(0,212,255,0.1);
+  border: 1px solid rgba(0,212,255,0.3);
+  color: var(--accent);
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+  white-space: nowrap;
+}
+.download-btn:hover {
+  background: rgba(0,212,255,0.18);
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+@media (max-width: 768px) {
+  .downloads-grid { grid-template-columns: 1fr; }
+  .download-card { flex-wrap: wrap; gap: 16px; }
+  .download-btn { width: 100%; justify-content: center; }
+}
+
+/* ============================================================
    CONTACT
    ============================================================ */
 .contact-section { background: var(--bg2); }
