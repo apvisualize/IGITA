@@ -1286,7 +1286,7 @@ footer { border-top: 1px solid var(--border); padding: 36px var(--side-pad); dis
   font-family: 'JetBrains Mono', monospace; font-size: 0.62rem;
   color: var(--accent); padding: 3px 8px;
   background: rgba(0,136,255,0.1);
-  border-radius: 3px;
+  border-radius: 1px;
   border: 1px solid rgba(0,136,255,0.2);
 }
 
