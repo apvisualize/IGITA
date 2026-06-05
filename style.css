@@ -256,7 +256,7 @@ nav.scrolled { top: 0; padding: 12px var(--side-pad); background: rgba(6,8,15,0.
   flex-shrink: 0; min-height: 52px; display: inline-flex; align-items: center; justify-content: center;
   box-shadow: 0 0 18px rgba(0,212,255,0.18);
 }
-.nav-cta:hover, .nav-cta:focus-visible { background: var(--accent); color: var(--bg); box-shadow: var(--glow); outline: none; }
+.nav-cta:hover, .nav-cta:focus-visible { background: var(--accent); box-shadow: var(--glow);color:#fff; outline: none; }
 
 /* ============================================================
    HAMBURGER BUTTON
@@ -457,14 +457,13 @@ nav.scrolled { top: 0; padding: 12px var(--side-pad); background: rgba(6,8,15,0.
    BUTTONS
    ============================================================ */
 .btn-primary {
-  background: var(--accent); color: var(--bg); padding: 18px 44px; border-radius: var(--radius);
-  font-weight: 800; font-size: 1.05rem; text-decoration: none; font-family: 'Syne', sans-serif;
+  background: linear-gradient(135deg, #00b4ff 0%, #0055ff 100%); padding: 18px 44px; border-radius: var(--radius);
+  color: #fff; font-weight: 800; font-size: 1.05rem; text-decoration: none; font-family: 'Syne', sans-serif;
   letter-spacing: 0.08em; text-transform: uppercase; transition: all 0.25s;
   display: inline-flex; align-items: center; gap: 8px;
-  box-shadow: 0 0 36px rgba(0,212,255,0.35), inset 0 1px 0 rgba(255,255,255,0.15); min-height: 58px; justify-content: center;
   touch-action: manipulation;
 }
-.btn-primary:hover, .btn-primary:focus-visible { transform: translateY(-2px); box-shadow: 0 0 50px rgba(0,212,255,0.45); outline: none; }
+.btn-primary:hover, .btn-primary:focus-visible { transform: translateY(-2px); box-shadow: 0 0 36px rgba(0,212,255,0.35); outline: none; }
 
 .btn-secondary { color: var(--muted); font-size: 0.88rem; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: color 0.2s; font-weight: 500; min-height: 44px; padding: 8px 0; }
 .btn-secondary:hover, .btn-secondary:focus-visible { color: var(--text); outline: none; }
@@ -1608,6 +1607,7 @@ footer { border-top: 1px solid var(--border); padding: 36px var(--side-pad); dis
 .confirm-btn-send:hover {
   transform: translateY(-1px);
   box-shadow: 0 0 32px rgba(0,136,255,0.45), 0 6px 16px rgba(0,0,0,0.3);
+  color:var(--bg);
 }
 .confirm-btn-send:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
@@ -2267,9 +2267,10 @@ body.reg-page .reg-close { display: none !important; }
 }
 .btn-reg-next:hover,
 .btn-reg-submit:hover {
-  background: #00d4ff;
+  background: #01bbff;
   transform: translateY(-2px);
   box-shadow: 0 0 36px rgba(0,212,255,0.42), 0 6px 18px rgba(0,0,0,0.35);
+  color:var(--bg);
 }
 .btn-reg-close:hover {
   transform: translateY(-2px);
@@ -2395,7 +2396,7 @@ body.reg-page .reg-close { display: none !important; }
 
 /* ── Confirm send button: hover glow ── */
 .confirm-btn-send:hover {
-  background: #00eeff;
+  background: #01bbff;;
   box-shadow: 0 0 22px rgba(0,212,255,0.38);
 }
 
@@ -2774,7 +2775,7 @@ body.reg-page .reg-close { display: none !important; }
 .mobile-nav .mobile-cta:hover,
 .mobile-nav .mobile-cta:focus-visible {
   background: var(--accent);
-  color: var(--bg);
+  color: #fff;
   box-shadow: 0 0 40px rgba(0, 136, 255, 0.45);
   transform: translateY(-1px);
   outline: none;
