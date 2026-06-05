@@ -79,17 +79,54 @@
       width: 120px; opacity: 0.08; pointer-events: none; overflow: hidden;
     }
 
-    /* ── Step ring pulse on active ── */
+    /* ── Step ring: spinning conic arc ── */
+    @keyframes arcSpin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+    @keyframes arcSpinReverse {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(-360deg); }
+    }
+
+    /* Outer spinning arc */
     .reg-step.active .step-num::after {
       content: '';
-      position: absolute; inset: -5px;
+      position: absolute;
+      inset: -5px;
       border-radius: 50%;
-      border: 1px solid rgba(0,212,255,0.4);
-      animation: stepPulseRing 2s ease-in-out infinite;
+      background: conic-gradient(
+        from 0deg,
+        rgba(0,212,255,0)    0%,
+        rgba(0,212,255,1)   22%,
+        rgba(0,188,255,0.5) 38%,
+        rgba(0,212,255,0)   52%,
+        rgba(0,212,255,0)  100%
+      );
+      -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), black calc(100% - 1.5px));
+      mask: radial-gradient(farthest-side, transparent calc(100% - 3px), black calc(100% - 1.5px));
+      animation: arcSpin 1.6s linear infinite;
+      z-index: -1;
     }
-    @keyframes stepPulseRing {
-      0%, 100% { opacity: 0; transform: scale(0.9); }
-      50%       { opacity: 1; transform: scale(1.1); }
+
+    /* Inner counter-spinning arc */
+    .reg-step.active .step-num::before {
+      content: '';
+      position: absolute;
+      inset: -9px;
+      border-radius: 50%;
+      background: conic-gradient(
+        from 180deg,
+        rgba(0,136,255,0)    0%,
+        rgba(0,136,255,0.55) 18%,
+        rgba(0,136,255,0.2)  30%,
+        rgba(0,136,255,0)    45%,
+        rgba(0,136,255,0)   100%
+      );
+      -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2.5px), black calc(100% - 1px));
+      mask: radial-gradient(farthest-side, transparent calc(100% - 2.5px), black calc(100% - 1px));
+      animation: arcSpinReverse 2.8s linear infinite;
+      z-index: -1;
     }
 
     /* ── Member card role color variants ── */
@@ -105,12 +142,15 @@
 
     /* ── Section icon chip ── */
     .sec-icon {
-      display: inline-flex; align-items: center; justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       width: 26px; height: 26px;
       background: rgba(0,136,255,0.08);
       border: 1px solid rgba(0,136,255,0.18);
       border-radius: 6px;
       flex-shrink: 0;
+      align-self: center;
+      position: relative;
+      top: 1px;
     }
     .sec-icon svg { display: block; }
 
