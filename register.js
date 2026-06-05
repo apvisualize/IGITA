@@ -57,6 +57,12 @@
     return v.trim().length >= 3;
   }
 
+  // Link IG: harus URL instagram yang valid
+  function isValidLinkIG(v) {
+    const val = v.trim();
+    return /^https?:\/\/(www\.)?instagram\.com\/.+/.test(val);
+  }
+
   // File: jpg/png/pdf, max 2MB
   function isValidFile(file) {
     if (!file) return { ok: false, msg: 'Bukti pembayaran wajib diunggah.' };
@@ -229,12 +235,27 @@
       setupHPInput(`m${i}-hp`);
       setupIGInput(`m${i}-ig`);
     }
-    // Anggota 3-4: hanya nama dan instagram
+    // Anggota 3-4: hanya nama (tidak ada IG)
     for (let i = 3; i <= 4; i++) {
       setupNamaInput(`m${i}-nama`);
-      setupIGInput(`m${i}-ig`);
     }
     setupProposalInput();
+    setupLinkIGInput();
+  }
+
+  // Setup validasi real-time link IG
+  function setupLinkIGInput() {
+    const el = document.getElementById('link-ig-post');
+    if (!el) return;
+    el.addEventListener('blur', () => {
+      const val = el.value.trim();
+      if (val.length > 0) {
+        const valid = isValidLinkIG(val);
+        showErr('err-link-ig', !valid, valid ? '' : 'Link tidak valid. Contoh: https://www.instagram.com/username');
+        setInputErr('link-ig-post', !valid);
+        setInputOk('link-ig-post', valid);
+      }
+    });
   }
 
   // ============================================================
@@ -248,13 +269,17 @@
       if (radio) {
         radio.checked = true;
         const rowInst = document.getElementById('row-asal-institusi');
-        if (rowInst) {
-          if (radio.value === 'internal') {
-            rowInst.style.display = 'none';
-            setInputErr('asal-institusi', false);
-            showErr('err-asal-institusi', false);
-          } else {
-            rowInst.style.display = '';
+        const jurusanRows = document.querySelectorAll('.jurusan-row');
+        if (radio.value === 'internal') {
+          if (rowInst) { rowInst.style.display = 'none'; setInputErr('asal-institusi', false); showErr('err-asal-institusi', false); }
+          jurusanRows.forEach(r => r.style.display = '');
+        } else {
+          if (rowInst) rowInst.style.display = '';
+          jurusanRows.forEach(r => r.style.display = 'none');
+          // Clear jurusan errors when switching to external
+          for (let i = 1; i <= 4; i++) {
+            setInputErr(`m${i}-jurusan`, false);
+            showErr(`err-m${i}-jurusan`, false);
           }
         }
       }
@@ -297,6 +322,9 @@
     let ok = true;
     let firstErrEl = null;
 
+    const kat = document.querySelector('input[name="kategori"]:checked')?.value;
+    const isInternal = kat === 'internal';
+
     // --- Anggota 1 (Ketua) & 2 (Wakil): wajib semua field ---
     [1, 2].forEach(i => {
       const namId = `m${i}-nama`;
@@ -334,57 +362,62 @@
       setInputErr(igId, badIg); setInputOk(igId, !badIg);
       showErr(`err-${igId}`, badIg, badIg ? ERR_MSG.ig : '');
       if (badIg) { ok = false; if (!firstErrEl) firstErrEl = document.getElementById(igId); }
+
+      // Jurusan — wajib jika internal
+      if (isInternal) {
+        const jurId  = `m${i}-jurusan`;
+        const jurVal = document.getElementById(jurId)?.value.trim() || '';
+        const badJur = jurVal.length < 3;
+        setInputErr(jurId, badJur); setInputOk(jurId, !badJur);
+        showErr(`err-${jurId}`, badJur, badJur ? 'Jurusan wajib diisi (min. 3 karakter).' : '');
+        if (badJur) { ok = false; if (!firstErrEl) firstErrEl = document.getElementById(jurId); }
+      }
     });
 
-    // --- Anggota 3: wajib (hanya nama + instagram) ---
+    // --- Anggota 3: wajib nama saja ---
     {
-      const namId = 'm3-nama'; const igId = 'm3-ig';
+      const namId = 'm3-nama';
       const namVal = document.getElementById(namId)?.value.trim() || '';
-      const igVal  = document.getElementById(igId)?.value.trim()  || '';
 
       const badNam = !isValidNama(namVal);
       setInputErr(namId, badNam); setInputOk(namId, !badNam);
       showErr(`err-${namId}`, badNam, badNam ? ERR_MSG.nama : '');
       if (badNam) { ok = false; if (!firstErrEl) firstErrEl = document.getElementById(namId); }
 
-      let igFinal = igVal;
-      if (igFinal.length > 0 && !igFinal.startsWith('@')) {
-        igFinal = '@' + igFinal;
-        const igEl = document.getElementById(igId);
-        if (igEl) igEl.value = igFinal;
+      // Jurusan — wajib jika internal
+      if (isInternal) {
+        const jurId  = 'm3-jurusan';
+        const jurVal = document.getElementById(jurId)?.value.trim() || '';
+        const badJur = jurVal.length < 3;
+        setInputErr(jurId, badJur); setInputOk(jurId, !badJur);
+        showErr(`err-${jurId}`, badJur, badJur ? 'Jurusan wajib diisi (min. 3 karakter).' : '');
+        if (badJur) { ok = false; if (!firstErrEl) firstErrEl = document.getElementById(jurId); }
       }
-      const badIg = !isValidIG(igFinal);
-      setInputErr(igId, badIg); setInputOk(igId, !badIg);
-      showErr(`err-${igId}`, badIg, badIg ? ERR_MSG.ig : '');
-      if (badIg) { ok = false; if (!firstErrEl) firstErrEl = document.getElementById(igId); }
     }
 
-    // --- Anggota 4: opsional — skip jika kosong, validasi jika diisi ---
+    // --- Anggota 4: opsional — skip jika kosong, validasi jika nama diisi ---
     {
-      const namId = 'm4-nama'; const igId = 'm4-ig';
+      const namId = 'm4-nama';
       const namVal = document.getElementById(namId)?.value.trim() || '';
-      const igVal  = document.getElementById(igId)?.value.trim()  || '';
 
-      if (namVal || igVal) {
+      if (namVal) {
         const badNam = !isValidNama(namVal);
         setInputErr(namId, badNam); setInputOk(namId, !badNam);
         showErr(`err-${namId}`, badNam, badNam ? ERR_MSG.nama : '');
         if (badNam) { ok = false; if (!firstErrEl) firstErrEl = document.getElementById(namId); }
 
-        let igFinal = igVal;
-        if (igFinal.length > 0 && !igFinal.startsWith('@')) {
-          igFinal = '@' + igFinal;
-          const igEl = document.getElementById(igId);
-          if (igEl) igEl.value = igFinal;
-        }
-        if (igFinal) {
-          const badIg = !isValidIG(igFinal);
-          setInputErr(igId, badIg); setInputOk(igId, !badIg);
-          showErr(`err-${igId}`, badIg, badIg ? ERR_MSG.ig : '');
-          if (badIg) { ok = false; if (!firstErrEl) firstErrEl = document.getElementById(igId); }
+        // Jurusan — wajib jika internal dan nama diisi
+        if (isInternal) {
+          const jurId  = 'm4-jurusan';
+          const jurVal = document.getElementById(jurId)?.value.trim() || '';
+          const badJur = jurVal.length < 3;
+          setInputErr(jurId, badJur); setInputOk(jurId, !badJur);
+          showErr(`err-${jurId}`, badJur, badJur ? 'Jurusan wajib diisi jika nama diisi.' : '');
+          if (badJur) { ok = false; if (!firstErrEl) firstErrEl = document.getElementById(jurId); }
         }
       } else {
-        [namId, igId].forEach(id => { setInputErr(id, false); setInputOk(id, false); showErr(`err-${id}`, false); });
+        setInputErr(namId, false); setInputOk(namId, false); showErr(`err-${namId}`, false);
+        setInputErr('m4-jurusan', false); showErr('err-m4-jurusan', false);
       }
     }
 
@@ -411,8 +444,8 @@
       }
     }));
 
-    // ---- Cek duplikat Instagram (semua anggota) ----
-    const igVals = [1, 2, 3, 4].map(i => ({ id: i, val: document.getElementById(`m${i}-ig`)?.value.trim().toLowerCase() || '' })).filter(g => g.val);
+    // ---- Cek duplikat Instagram (Ketua & Wakil saja, karena hanya mereka punya IG) ----
+    const igVals = [1, 2].map(i => ({ id: i, val: document.getElementById(`m${i}-ig`)?.value.trim().toLowerCase() || '' })).filter(g => g.val);
     igVals.forEach((a, i) => igVals.forEach((b, j) => {
       if (i !== j && a.val === b.val) {
         const id = `m${a.id}-ig`;
@@ -437,6 +470,14 @@
     setInputErr('proposal-file', !fileCheck.ok);
     showErr('err-proposal-file', !fileCheck.ok, fileCheck.msg || '');
     if (!fileCheck.ok) ok = false;
+
+    // Link IG
+    const linkIG = (document.getElementById('link-ig-post')?.value || '').trim();
+    const badLinkIG = !isValidLinkIG(linkIG);
+    setInputErr('link-ig-post', badLinkIG);
+    setInputOk('link-ig-post', !badLinkIG);
+    showErr('err-link-ig', badLinkIG, badLinkIG ? 'Link profil Instagram wajib diisi. Contoh: https://www.instagram.com/username' : '');
+    if (badLinkIG) ok = false;
 
     const agreed = document.getElementById('agree-check').checked;
     showErr('err-agree', !agreed);
@@ -513,6 +554,7 @@
     const kat      = document.querySelector('input[name="kategori"]:checked')?.value;
     const katLabel = kat === 'internal' ? 'Internal – Mahasiswa KKG' : 'Eksternal – SMA/SMK';
     const institusi = kat === 'internal' ? 'Internal KKG' : get('asal-institusi');
+    const isInternal = kat === 'internal';
 
     document.getElementById('cf-kategori').textContent  = katLabel;
     document.getElementById('cf-nama-tim').textContent  = get('nama-tim');
@@ -527,20 +569,31 @@
       if (!nama) continue;
       const block = document.createElement('div');
       block.className = 'confirm-member-block';
-      block.innerHTML = `
+
+      const isLeader = i <= 2;
+      let html = `
         <div class="confirm-member-title">${labels[i-1]}</div>
         <div class="confirm-row"><span class="confirm-key">Nama</span><span class="confirm-val">${nama}</span></div>
+      `;
+      if (isLeader) {
+        html += `
         <div class="confirm-row"><span class="confirm-key">Email</span><span class="confirm-val">${get(`m${i}-email`)}</span></div>
         <div class="confirm-row"><span class="confirm-key">No. HP</span><span class="confirm-val">${get(`m${i}-hp`)}</span></div>
         <div class="confirm-row"><span class="confirm-key">Instagram</span><span class="confirm-val">${get(`m${i}-ig`)}</span></div>
-      `;
+        `;
+      }
+      if (isInternal) {
+        html += `<div class="confirm-row"><span class="confirm-key">Jurusan</span><span class="confirm-val">${get(`m${i}-jurusan`) || '—'}</span></div>`;
+      }
+      block.innerHTML = html;
       cfMembers.appendChild(block);
     }
 
-    // File
+    // File & Link IG
     const fileInput = document.getElementById('proposal-file');
     const file = fileInput?.files[0];
     document.getElementById('cf-file').textContent = file ? file.name : '—';
+    document.getElementById('cf-link-ig').textContent = get('link-ig-post') || '—';
 
     confirmOverlay.classList.add('open');
     confirmOverlay.setAttribute('aria-hidden', 'false');
@@ -586,12 +639,17 @@
         kategori       : katLabel,
         namaTim        : get('nama-tim'),
         institusi      : kat === 'internal' ? 'Internal KKG' : get('asal-institusi'),
-        a1_nama  : get('m1-nama'),  a1_email : get('m1-email'),
-        a1_hp    : get('m1-hp'),    a1_ig    : get('m1-ig'),
-        a2_nama  : get('m2-nama'),  a2_email : get('m2-email'),
-        a2_hp    : get('m2-hp'),    a2_ig    : get('m2-ig'),
-        a3_nama  : get('m3-nama'),  a3_ig    : get('m3-ig'),
-        a4_nama  : get('m4-nama'),  a4_ig    : get('m4-ig'),
+        a1_nama    : get('m1-nama'),  a1_email   : get('m1-email'),
+        a1_hp      : get('m1-hp'),    a1_ig      : get('m1-ig'),
+        a1_jurusan : kat === 'internal' ? get('m1-jurusan') : '',
+        a2_nama    : get('m2-nama'),  a2_email   : get('m2-email'),
+        a2_hp      : get('m2-hp'),    a2_ig      : get('m2-ig'),
+        a2_jurusan : kat === 'internal' ? get('m2-jurusan') : '',
+        a3_nama    : get('m3-nama'),
+        a3_jurusan : kat === 'internal' ? get('m3-jurusan') : '',
+        a4_nama    : get('m4-nama'),
+        a4_jurusan : kat === 'internal' ? get('m4-jurusan') : '',
+        linkIGPost : get('link-ig-post'),
       };
 
       // Proposal ke base64
@@ -706,6 +764,8 @@
     if (helper) { helper.textContent = 'Format: PDF · Maks. 10MB · Gunakan template proposal resmi IGITA 2026.'; helper.style.color = ''; }
     const proposalName = document.getElementById('proposal-file-name');
     if (proposalName) proposalName.textContent = 'Belum ada file dipilih';
+    // Hide jurusan rows on reset
+    document.querySelectorAll('.jurusan-row').forEach(r => r.style.display = 'none');
     btnSubmit.classList.remove('loading');
     btnSubmit.disabled = false;
     btnBack.disabled   = false;
@@ -723,8 +783,8 @@
   const urlParams = new URLSearchParams(window.location.search);
   const katParam  = urlParams.get('kategori');
   if (katParam === 'internal' || katParam === 'external') {
-    const targetRadio = document.getElementById(`radio-${katParam}`);
-    if (targetRadio) targetRadio.click();
+    const targetCard = document.getElementById(`card-${katParam}`);
+    if (targetCard) targetCard.click();
   }
 
   // ============================================================
