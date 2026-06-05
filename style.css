@@ -1403,7 +1403,7 @@ footer { border-top: 1px solid var(--border); padding: 36px var(--side-pad); dis
   box-shadow: 0 0 12px rgba(0,136,255,0.08);
 }
 .file-upload-btn:hover {
-  background: linear-gradient(135deg, #00b4ff, #0055ff);
+  background: var(--accent);
   color: #fff;
   border-color: transparent;
   box-shadow: 0 0 20px rgba(0,136,255,0.3), 0 4px 12px rgba(0,0,0,0.3);
@@ -1473,7 +1473,7 @@ footer { border-top: 1px solid var(--border); padding: 36px var(--side-pad); dis
 
 /* Saat dicentang */
 .custom-checkbox-input:checked + .custom-checkbox-label .custom-checkbox-box {
-  background: linear-gradient(135deg, #00d4ff, #0066ff);
+  background: var(--accent);
   border-color: transparent;
   box-shadow: 0 0 14px rgba(0,212,255,0.4);
 }
