@@ -470,7 +470,7 @@ nav.scrolled { top: 0; padding: 12px var(--side-pad); background: rgba(6,8,15,0.
 }
 .btn-primary:hover::before, .btn-primary:focus-visible::before { left: 160%; transition: left 0.55s ease; }
 .btn-primary:hover, .btn-primary:focus-visible {outline: none;
- box-shadow: 0 0 12px rgba(0,212,255,0.35), 0 0 30px rgba(0,120,255,0.15);
+ transform: translateY(-2px);box-shadow: 0 0 12px rgba(0,212,255,0.35), 0 0 30px rgba(0,120,255,0.15);
 }
 .btn-primary:active { transform: translateY(0) scale(0.985); box-shadow: 0 0 10px rgba(0,212,255,0.40), 0 0 30px rgba(0,120,255,0.20), inset 0 1px 0 rgba(255,255,255,0.15); }
 
@@ -1599,7 +1599,7 @@ footer { border-top: 1px solid var(--border); padding: 36px var(--side-pad); dis
   cursor: pointer;
   transition: all 0.2s;
 }
-.confirm-btn-edit:hover { border-color: var(--accent); color: var(--accent); background: rgba(0,136,255,0.05); }
+.confirm-btn-edit:hover { border-color: rgba(0,212,255,0.45); color: var(--accent); background: rgba(0,212,255,0.05); }
 .confirm-btn-send {
   background: linear-gradient(135deg, #00b4ff, #0055ff);
   border: none;
@@ -1616,7 +1616,6 @@ footer { border-top: 1px solid var(--border); padding: 36px var(--side-pad); dis
 .confirm-btn-send:hover {
   transform: translateY(-1px);
   box-shadow: 0 0 32px rgba(0,136,255,0.45), 0 6px 16px rgba(0,0,0,0.3);
-  color:var(--bg);
 }
 .confirm-btn-send:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
@@ -1651,10 +1650,6 @@ footer { border-top: 1px solid var(--border); padding: 36px var(--side-pad); dis
   letter-spacing: 0.03em;
   touch-action: manipulation;
 }
-.btn-reg-next:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 0 36px rgba(0,136,255,0.4), 0 8px 20px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.18);
-}
 .btn-reg-next:active { transform: translateY(0); }
 .btn-reg-next:disabled { opacity: 0.45; cursor: not-allowed; transform: none; box-shadow: none; }
 
@@ -1669,10 +1664,6 @@ footer { border-top: 1px solid var(--border); padding: 36px var(--side-pad); dis
   touch-action: manipulation;
 }
 .btn-reg-submit.visible { display: inline-flex; }
-.btn-reg-submit:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 0 36px rgba(0,136,255,0.4), 0 8px 20px rgba(0,0,0,0.35);
-}
 
 /* Loading spinner */
 .btn-spinner {
@@ -1682,6 +1673,7 @@ footer { border-top: 1px solid var(--border); padding: 36px var(--side-pad); dis
 }
 .btn-reg-submit.loading .btn-spinner { display: block; }
 .btn-reg-submit.loading .btn-submit-text { display: none; }
+.btn-reg-submit.loading { pointer-events: none; opacity: 0.8; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* Success Panel */
@@ -1749,10 +1741,6 @@ footer { border-top: 1px solid var(--border); padding: 36px var(--side-pad); dis
   box-shadow: 0 0 28px rgba(0,136,255,0.3), inset 0 1px 0 rgba(255,255,255,0.2);
   letter-spacing: 0.04em;
   touch-action: manipulation;
-}
-.btn-reg-close:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 0 50px rgba(0,136,255,0.5), 0 8px 24px rgba(0,0,0,0.4);
 }
 
 /* Divider line in member cards */
@@ -2276,21 +2264,15 @@ body.reg-page .reg-close { display: none !important; }
 }
 .btn-reg-next:hover,
 .btn-reg-submit:hover {
-  background: #01bbff;
+  background: linear-gradient(135deg, #00ccff 0%, #0066ff 100%);
   transform: translateY(-2px);
-  box-shadow: 0 0 36px rgba(0,212,255,0.42), 0 6px 18px rgba(0,0,0,0.35);
-  color:var(--bg);
+  box-shadow: 0 0 36px rgba(0,212,255,0.42), 0 6px 18px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.22);
+  color: #fff;
 }
 .btn-reg-close:hover {
   transform: translateY(-2px);
   box-shadow: 0 0 52px rgba(0,212,255,0.48), 0 6px 20px rgba(0,0,0,0.4);
 }
-.btn-reg-back:hover {
-  border-color: rgba(0,212,255,0.45);
-  color: var(--text);
-  background: rgba(0,212,255,0.05);
-}
-
 /* ── File Upload: dashed border with hover glow ── */
 .file-upload-wrap {
   border-style: dashed;
@@ -2405,15 +2387,10 @@ body.reg-page .reg-close { display: none !important; }
 
 /* ── Confirm send button: hover glow ── */
 .confirm-btn-send:hover {
-  background: #01bbff;;
-  box-shadow: 0 0 22px rgba(0,212,255,0.38);
-}
-
-/* ── Confirm edit button: hover ── */
-.confirm-btn-edit:hover {
-  border-color: rgba(0,212,255,0.45);
-  color: var(--accent);
-  background: rgba(0,212,255,0.05);
+  background: linear-gradient(135deg, #00ccff 0%, #0066ff 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 0 22px rgba(0,212,255,0.38), 0 4px 14px rgba(0,0,0,0.3);
+  color: #fff;
 }
 
 /* ── Member badge: pill upgrade ── */
