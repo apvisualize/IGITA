@@ -470,7 +470,8 @@ nav.scrolled { top: 0; padding: 12px var(--side-pad); background: rgba(6,8,15,0.
 }
 .btn-primary:hover::before, .btn-primary:focus-visible::before { left: 160%; transition: left 0.55s ease; }
 .btn-primary:hover, .btn-primary:focus-visible {outline: none;
- transform: translateY(-2px);box-shadow: 0 0 12px rgba(0,212,255,0.35), 0 0 30px rgba(0,120,255,0.15);
+ transform: translateY(-2px);box-shadow: 0 0 12px rgba(0,212,255,0.35), 0 0 30px rgba(0,120,255,0.15), inset 0 1px 0 rgba(255,255,255,0.22);
+ background: linear-gradient(135deg, #00ccff 0%, #0066ff 100%);
 }
 .btn-primary:active { transform: translateY(0) scale(0.985); box-shadow: 0 0 10px rgba(0,212,255,0.40), 0 0 30px rgba(0,120,255,0.20), inset 0 1px 0 rgba(255,255,255,0.15); }
 
@@ -1613,10 +1614,6 @@ footer { border-top: 1px solid var(--border); padding: 36px var(--side-pad); dis
   transition: all 0.25s;
   box-shadow: 0 0 20px rgba(0,136,255,0.25), inset 0 1px 0 rgba(255,255,255,0.15);
 }
-.confirm-btn-send:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 0 32px rgba(0,136,255,0.45), 0 6px 16px rgba(0,0,0,0.3);
-}
 .confirm-btn-send:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
 /* Footer buttons */
@@ -2246,12 +2243,7 @@ body.reg-page .reg-close { display: none !important; }
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    105deg,
-    transparent 30%,
-    rgba(255,255,255,0.22) 50%,
-    transparent 70%
-  );
+  background: linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.22) 50%, transparent 70%);
   transform: translateX(-150%);
   transition: transform 0.5s ease;
   pointer-events: none;
@@ -2266,12 +2258,13 @@ body.reg-page .reg-close { display: none !important; }
 .btn-reg-submit:hover {
   background: linear-gradient(135deg, #00ccff 0%, #0066ff 100%);
   transform: translateY(-2px);
-  box-shadow: 0 0 36px rgba(0,212,255,0.42), 0 6px 18px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.22);
+  box-shadow: 0 0 12px rgba(0,212,255,0.35), 0 0 30px rgba(0,120,255,0.15), inset 0 1px 0 rgba(255,255,255,0.22);
   color: #fff;
 }
 .btn-reg-close:hover {
+  background: linear-gradient(135deg, #00ccff 0%, #0066ff 100%);
   transform: translateY(-2px);
-  box-shadow: 0 0 52px rgba(0,212,255,0.48), 0 6px 20px rgba(0,0,0,0.4);
+  box-shadow: 0 0 12px rgba(0,212,255,0.35), 0 0 30px rgba(0,120,255,0.15), inset 0 1px 0 rgba(255,255,255,0.22);
 }
 /* ── File Upload: dashed border with hover glow ── */
 .file-upload-wrap {
@@ -2388,8 +2381,8 @@ body.reg-page .reg-close { display: none !important; }
 /* ── Confirm send button: hover glow ── */
 .confirm-btn-send:hover {
   background: linear-gradient(135deg, #00ccff 0%, #0066ff 100%);
-  transform: translateY(-1px);
-  box-shadow: 0 0 22px rgba(0,212,255,0.38), 0 4px 14px rgba(0,0,0,0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 0 12px rgba(0,212,255,0.35), 0 0 30px rgba(0,120,255,0.15), inset 0 1px 0 rgba(255,255,255,0.22);
   color: #fff;
 }
 
