@@ -1,18 +1,45 @@
 document.addEventListener('DOMContentLoaded', () => {
 
   // ============================================================
-  // LOADING SCREEN
+  // LOADING SCREEN — Ring Progress + Counter
   // ============================================================
   const loaderScreen = document.getElementById('loader-screen');
-  const loaderBar    = document.getElementById('loader-bar');
+  const loaderBar    = document.getElementById('loader-bar');       // status fill bar
   const loaderText   = document.getElementById('loader-text');
+  const loaderPct    = document.getElementById('loader-pct');
+  const ringProgress = document.getElementById('loader-ring-progress');
+
+  // SVG circle circumference: 2 * π * 52 ≈ 326.73
+  const CIRCUMFERENCE = 2 * Math.PI * 52;
 
   const loadSteps = [
-    { pct: 20, text: 'Menyiapkan tampilan...' },
-    { pct: 50, text: 'Memuat konten...' },
-    { pct: 80, text: 'Menginisialisasi...' },
+    { pct: 18,  text: 'Menyiapkan tampilan...' },
+    { pct: 42,  text: 'Memuat konten...' },
+    { pct: 71,  text: 'Menginisialisasi...' },
     { pct: 100, text: 'Siap!' },
   ];
+
+  function setProgress(pct) {
+    // Ring arc
+    if (ringProgress) {
+      const offset = CIRCUMFERENCE - (pct / 100) * CIRCUMFERENCE;
+      ringProgress.style.strokeDashoffset = offset;
+    }
+    // Thin status bar
+    if (loaderBar) loaderBar.style.width = pct + '%';
+    // Counter — animate from previous value
+    if (loaderPct) {
+      const current = parseInt(loaderPct.textContent) || 0;
+      const target  = pct;
+      const step    = Math.ceil((target - current) / 8);
+      let val = current;
+      const tick = setInterval(() => {
+        val = Math.min(val + step, target);
+        loaderPct.innerHTML = val + '<span>%</span>';
+        if (val >= target) clearInterval(tick);
+      }, 28);
+    }
+  }
 
   if (loaderScreen) {
     document.body.classList.add('is-loading');
@@ -21,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function nextStep() {
       if (step >= loadSteps.length) return;
       const { pct, text } = loadSteps[step];
-      if (loaderBar) loaderBar.style.width = pct + '%';
+      setProgress(pct);
       if (loaderText) loaderText.textContent = text;
       step++;
     }
@@ -30,13 +57,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const stepInterval = setInterval(() => {
       nextStep();
       if (step >= loadSteps.length) clearInterval(stepInterval);
-    }, 300);
+    }, 320);
 
-    // Sembunyikan loader setelah semua selesai
     setTimeout(() => {
       loaderScreen.classList.add('hidden');
       document.body.classList.remove('is-loading');
-    }, 1400);
+    }, 1550);
   }
 
   // ============================================================

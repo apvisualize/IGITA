@@ -207,19 +207,27 @@
     fileInput.addEventListener('change', () => {
       const file   = fileInput.files[0];
       const result = isValidProposal(file);
-      if (nameDisp) nameDisp.textContent = file ? file.name : 'Belum ada file dipilih';
+      // Truncate long names for display (max 40 chars)
+      const shortName = file
+        ? (file.name.length > 40 ? file.name.slice(0, 37) + '…' : file.name)
+        : 'Belum ada file dipilih';
+      if (nameDisp) {
+        nameDisp.textContent = shortName;
+        nameDisp.classList.toggle('has-file', !!file);
+      }
       if (!result.ok) {
         showErr('err-proposal-file', true, result.msg);
         setInputErr('proposal-file', true);
         if (helper) { helper.textContent = 'Format: PDF · Maks. 10MB.'; helper.style.color = ''; }
         fileInput.value = '';
-        if (nameDisp) nameDisp.textContent = 'Belum ada file dipilih';
+        if (nameDisp) { nameDisp.textContent = 'Belum ada file dipilih'; nameDisp.classList.remove('has-file'); }
       } else {
         showErr('err-proposal-file', false);
         setInputErr('proposal-file', false);
         const kb = (file.size / 1024).toFixed(0);
         if (helper) {
-          helper.textContent = '✓ ' + file.name + ' (' + kb + ' KB)';
+          const displayName = file.name.length > 32 ? file.name.slice(0, 29) + '…' : file.name;
+          helper.textContent = '✓ ' + displayName + ' (' + kb + ' KB)';
           helper.style.color = 'var(--accent, #00d4ff)';
         }
       }
@@ -259,12 +267,52 @@
   }
 
   // ============================================================
-  // CATEGORY CARD SELECTION
+  // CATEGORY CARD SELECTION — with animated SVG checkmark
   // ============================================================
+
+  // Inject SVG + pulse ring into every .cat-check on load
+  (function injectCheckSVGs() {
+    document.querySelectorAll('.cat-check').forEach(el => {
+      if (el.querySelector('.cat-check-svg')) return;
+      const ring = document.createElement('span');
+      ring.className = 'cat-check-ring';
+      Object.assign(ring.style, {
+        position: 'absolute', inset: '-6px', borderRadius: '50%',
+        border: '1.5px solid rgba(0,212,255,0.45)', pointerEvents: 'none',
+      });
+      el.insertBefore(ring, el.firstChild);
+      el.insertAdjacentHTML('beforeend',
+        `<svg class="cat-check-svg" viewBox="0 0 14 14" width="14" height="14"
+             xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+           <polyline class="cat-check-path"
+             points="2,7 5.5,10.5 12,3"
+             stroke="#fff" stroke-width="2.5"
+             stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+         </svg>`
+      );
+    });
+  })();
+
+  // Replay draw animation on each selection
+  function replayCheckAnim(card) {
+    const path  = card.querySelector('.cat-check-path');
+    const ring  = card.querySelector('.cat-check-ring');
+    const check = card.querySelector('.cat-check');
+    [path, check, ring].forEach(el => {
+      if (!el) return;
+      el.style.animation = 'none';
+      if (el === path) el.style.opacity = '0';
+      void el.offsetWidth;
+      el.style.animation = '';
+      if (el === path) el.style.opacity = '';
+    });
+  }
+
   document.querySelectorAll('.cat-select-card').forEach(card => {
     card.addEventListener('click', () => {
       document.querySelectorAll('.cat-select-card').forEach(c => c.classList.remove('selected'));
       card.classList.add('selected');
+      replayCheckAnim(card);
       const radio = card.querySelector('input[type="radio"]');
       if (radio) {
         radio.checked = true;
@@ -488,6 +536,41 @@
   }
 
   // ============================================================
+  // STEP SVG INJECTION — animated checkmark for done steps
+  // ============================================================
+  const STEP_CHECK_SVG = `
+    <svg class="step-done-svg" viewBox="0 0 14 14" width="13" height="13"
+         xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+      <polyline class="step-done-path"
+        points="2,7 5.5,10.5 12,3"
+        stroke="#fff" stroke-width="2.6"
+        stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </svg>`;
+
+  function injectStepSVGs() {
+    document.querySelectorAll('.step-num').forEach(el => {
+      if (!el.querySelector('.step-done-svg')) {
+        el.insertAdjacentHTML('beforeend', STEP_CHECK_SVG);
+      }
+    });
+  }
+
+  function replayStepCheckAnim(stepEl) {
+    const path = stepEl.querySelector('.step-done-path');
+    const num  = stepEl.querySelector('.step-num');
+    if (path) {
+      path.style.animation = 'none'; path.style.opacity = '0';
+      void path.offsetWidth;
+      path.style.animation = ''; path.style.opacity = '';
+    }
+    if (num) {
+      num.style.animation = 'none';
+      void num.offsetWidth;
+      num.style.animation = '';
+    }
+  }
+
+  // ============================================================
   // STEP NAVIGATION UI
   // ============================================================
   function updateStepUI() {
@@ -497,7 +580,10 @@
     document.querySelectorAll('.reg-step').forEach((s, i) => {
       const n = i + 1;
       s.classList.remove('active', 'done');
-      if (n < currentStep) s.classList.add('done');
+      if (n < currentStep) {
+        s.classList.add('done');
+        replayStepCheckAnim(s);
+      }
       if (n === currentStep) s.classList.add('active');
     });
     document.getElementById('conn-1-2').classList.toggle('done', currentStep > 1);
@@ -754,7 +840,11 @@
       else if (el.type === 'file') el.value = '';
       else el.value = '';
     });
-    document.querySelectorAll('.cat-select-card').forEach(c => c.classList.remove('selected'));
+    document.querySelectorAll('.cat-select-card').forEach(c => {
+      c.classList.remove('selected');
+      const path = c.querySelector('.cat-check-path');
+      if (path) { path.style.animation = 'none'; path.style.opacity = '0'; }
+    });
     document.querySelectorAll('.form-error').forEach(e => e.classList.remove('visible'));
     document.querySelectorAll('.form-input, .form-textarea, .form-select').forEach(i => {
       i.classList.remove('error', 'valid');
@@ -784,13 +874,14 @@
   const katParam  = urlParams.get('kategori');
   if (katParam === 'internal' || katParam === 'external') {
     const targetCard = document.getElementById(`card-${katParam}`);
-    if (targetCard) targetCard.click();
+    if (targetCard) { targetCard.click(); }
   }
 
   // ============================================================
   // INIT
   // ============================================================
   initInputSetup();
+  injectStepSVGs();
   updateStepUI();
 
   // File upload nama file display
