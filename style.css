@@ -250,13 +250,32 @@ nav.scrolled { top: 0; padding: 12px var(--side-pad); background: rgba(6,8,15,0.
 .nav-links a:hover::after, .nav-links a:focus-visible::after { width: 100%; }
 
 .nav-cta {
-  border: 2px solid var(--accent); color: var(--accent); padding: 13px 32px; border-radius: var(--radius);
+  border: none; color: var(--accent); padding: 13px 32px; border-radius: var(--radius);
   font-size: 0.95rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
-  text-decoration: none; transition: all 0.25s; font-family: 'Syne', sans-serif;
+  text-decoration: none; font-family: 'Syne', sans-serif;
   flex-shrink: 0; min-height: 52px; display: inline-flex; align-items: center; justify-content: center;
-  box-shadow: 0 0 18px rgba(0,212,255,0.18);
+  position: relative; overflow: hidden;
+  box-shadow: inset 0 0 0 2px var(--accent), 0 0 14px rgba(0,212,255,0.15);
+  transition: color 0.25s, box-shadow 0.25s, transform 0.25s;
 }
-.nav-cta:hover, .nav-cta:focus-visible { background: var(--accent); box-shadow: var(--glow);color:#fff; outline: none; }
+.nav-cta::before {
+  content: ''; position: absolute; inset: 0; border-radius: var(--radius);
+  background: linear-gradient(135deg, #00b4ff 0%, #0055ff 100%);
+  opacity: 0; transition: opacity 0.25s; pointer-events: none;
+}
+.nav-cta::after {
+  content: ''; position: absolute; top: 0; left: -100%; width: 55%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
+  transform: skewX(-20deg); transition: none; pointer-events: none; z-index: 1;
+}
+.nav-cta span { position: relative; z-index: 2; }
+.nav-cta:hover::before, .nav-cta:focus-visible::before { opacity: 1; }
+.nav-cta:hover::after, .nav-cta:focus-visible::after { left: 160%; transition: left 0.5s ease; }
+.nav-cta:hover, .nav-cta:focus-visible {
+  color: #fff; outline: none; 
+  box-shadow: 0 0 12px rgba(0,212,255,0.35), 0 0 30px rgba(0,120,255,0.15);
+}
+.nav-cta:active { transform: translateY(0) scale(0.985); box-shadow: 0 0 10px rgba(0,212,255,0.4), 0 0 28px rgba(0,120,255,0.18); }
 
 /* ============================================================
    HAMBURGER BUTTON
@@ -367,15 +386,15 @@ nav.scrolled { top: 0; padding: 12px var(--side-pad); background: rgba(6,8,15,0.
   flex-shrink: 0;
   line-height: 1;
 }
-.mobile-nav a::before { display: none; }
-.mobile-nav a:hover,
-.mobile-nav a:focus-visible {
+.mobile-nav a:not(.mobile-cta)::before { display: none; }
+.mobile-nav a:not(.mobile-cta):hover,
+.mobile-nav a:not(.mobile-cta):focus-visible {
   color: var(--text);
   background: rgba(0, 136, 255, 0.04);
   outline: none;
 }
-.mobile-nav a:hover::after,
-.mobile-nav a:focus-visible::after {
+.mobile-nav a:not(.mobile-cta):hover::after,
+.mobile-nav a:not(.mobile-cta):focus-visible::after {
   color: var(--accent);
   transform: translateX(3px);
 }
@@ -383,33 +402,12 @@ nav.scrolled { top: 0; padding: 12px var(--side-pad); background: rgba(6,8,15,0.
 .mobile-nav a:nth-last-of-type(2) { border-bottom: none; }
 
 /* ── CTA button ──────────────────────────────────────────── */
-.mobile-nav .mobile-cta {
-  margin: 16px 20px 0;
-  background: var(--accent);
-  color: var(--bg);
-  border-radius: var(--radius);
-  padding: 14px 24px;
-  font-family: 'Syne', sans-serif;
-  font-size: 0.88rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  border: none;
-  min-height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: calc(100% - 40px);
-  transition: opacity 0.2s, box-shadow 0.2s, transform 0.2s;
-  box-shadow: 0 0 28px rgba(0, 136, 255, 0.35);
-}
-.mobile-nav .mobile-cta::after { display: none; }
-.mobile-nav .mobile-cta:hover,
-.mobile-nav .mobile-cta:focus-visible {
-  opacity: 0.88;
-  box-shadow: 0 0 40px rgba(0, 136, 255, 0.55);
-  transform: translateY(-1px);
-  outline: none;
+
+
+.mobile-nav .mobile-cta::after {
+  content: ''; position: absolute; top: 0; left: -100%; width: 55%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
+  transform: skewX(-20deg); transition: none; pointer-events: none; z-index: 1;
 }
 
 /* ============================================================
@@ -459,11 +457,22 @@ nav.scrolled { top: 0; padding: 12px var(--side-pad); background: rgba(6,8,15,0.
 .btn-primary {
   background: linear-gradient(135deg, #00b4ff 0%, #0055ff 100%); padding: 18px 44px; border-radius: var(--radius);
   color: #fff; font-weight: 800; font-size: 1.05rem; text-decoration: none; font-family: 'Syne', sans-serif;
-  letter-spacing: 0.08em; text-transform: uppercase; transition: all 0.25s;
+  letter-spacing: 0.08em; text-transform: uppercase;
   display: inline-flex; align-items: center; gap: 8px;
-  touch-action: manipulation;
+  touch-action: manipulation; position: relative; overflow: hidden;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: 0 0 12px rgba(0,180,255,0.25), 0 0 28px rgba(0,85,255,0.15), inset 0 1px 0 rgba(255,255,255,0.2);
 }
-.btn-primary:hover, .btn-primary:focus-visible { transform: translateY(-2px); box-shadow: 0 0 36px rgba(0,212,255,0.35); outline: none; }
+.btn-primary::before {
+  content: ''; position: absolute; top: 0; left: -100%; width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
+  transform: skewX(-20deg); transition: none; pointer-events: none;
+}
+.btn-primary:hover::before, .btn-primary:focus-visible::before { left: 160%; transition: left 0.55s ease; }
+.btn-primary:hover, .btn-primary:focus-visible {outline: none;
+ box-shadow: 0 0 12px rgba(0,212,255,0.35), 0 0 30px rgba(0,120,255,0.15);
+}
+.btn-primary:active { transform: translateY(0) scale(0.985); box-shadow: 0 0 10px rgba(0,212,255,0.40), 0 0 30px rgba(0,120,255,0.20), inset 0 1px 0 rgba(255,255,255,0.15); }
 
 .btn-secondary { color: var(--muted); font-size: 0.88rem; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: color 0.2s; font-weight: 500; min-height: 44px; padding: 8px 0; }
 .btn-secondary:hover, .btn-secondary:focus-visible { color: var(--text); outline: none; }
@@ -2750,7 +2759,7 @@ body.reg-page .reg-close { display: none !important; }
   margin: 0 20px;
   width: calc(100% - 40px);
   background: transparent;
-  border: 1.5px solid var(--accent);
+  border: none;
   color: var(--accent);
   border-radius: var(--radius);
   padding: 14px 24px;
@@ -2764,23 +2773,26 @@ body.reg-page .reg-close { display: none !important; }
   align-items: center;
   justify-content: center;
   gap: 8px;
-  box-shadow: 0 0 20px rgba(0, 136, 255, 0.1), inset 0 0 20px rgba(0, 136, 255, 0.03);
-  transition: background 0.25s, color 0.25s, box-shadow 0.25s, transform 0.2s;
+  box-shadow: inset 0 0 0 2px var(--accent), 0 0 14px rgba(0,212,255,0.15);
+  transition: color 0.25s, box-shadow 0.25s, transform 0.2s;
   position: relative;
   overflow: hidden;
+  isolation: isolate;
 }
-.mobile-nav .mobile-cta::before { display: none !important; }
-.mobile-nav .mobile-cta::after  { display: none !important; }
-
+.mobile-nav .mobile-cta::before {
+  content: ''; position: absolute; inset: 0; border-radius: var(--radius);
+  background: linear-gradient(135deg, #00b4ff 0%, #0055ff 100%);
+  opacity: 0; transition: opacity 0.25s; pointer-events: none;
+}
+.mobile-nav .mobile-cta span { position: relative; z-index: 2; }
+.mobile-nav .mobile-cta:hover::before, .mobile-nav .mobile-cta:focus-visible::before { opacity: 1; }
+.mobile-nav .mobile-cta:hover::after, .mobile-nav .mobile-cta:focus-visible::after { left: 160%; transition: left 0.5s ease; }
 .mobile-nav .mobile-cta:hover,
 .mobile-nav .mobile-cta:focus-visible {
-  background: var(--accent);
-  color: #fff;
-  box-shadow: 0 0 40px rgba(0, 136, 255, 0.45);
-  transform: translateY(-1px);
-  outline: none;
-  opacity: 1;
+  color: #fff; outline: none;
+  box-shadow: 0 0 12px rgba(0,212,255,0.35), 0 0 30px rgba(0,120,255,0.15);
 }
+.mobile-nav .mobile-cta:active { transform: scale(0.985); box-shadow: 0 0 10px rgba(0,212,255,0.4), 0 0 28px rgba(0,120,255,0.18); }
 
 /* ── Mobile nav responsiveness ── */
 @media (max-width: 480px) {
