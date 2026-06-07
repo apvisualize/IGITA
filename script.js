@@ -1,44 +1,44 @@
 document.addEventListener('DOMContentLoaded', () => {
 
   // ============================================================
-  // LOADING SCREEN — Ring Progress + Counter
+  // LOADING SCREEN — HUD Ring + Counter
   // ============================================================
   const loaderScreen = document.getElementById('loader-screen');
-  const loaderBar    = document.getElementById('loader-bar');       // status fill bar
+  const loaderBar    = document.getElementById('loader-bar');
   const loaderText   = document.getElementById('loader-text');
   const loaderPct    = document.getElementById('loader-pct');
+  const loaderPctSm  = document.getElementById('loader-pct-sm');
   const ringProgress = document.getElementById('loader-ring-progress');
 
-  // SVG circle circumference: 2 * π * 52 ≈ 326.73
-  const CIRCUMFERENCE = 2 * Math.PI * 52;
+  // 2 * π * 66 = 414.69
+  const CIRCUMFERENCE = 414.69;
 
   const loadSteps = [
     { pct: 18,  text: 'Menyiapkan tampilan...' },
-    { pct: 42,  text: 'Memuat konten...' },
-    { pct: 71,  text: 'Menginisialisasi...' },
+    { pct: 45,  text: 'Memuat konten...' },
+    { pct: 74,  text: 'Menginisialisasi...' },
     { pct: 100, text: 'Siap!' },
   ];
 
+  let currentPct = 0;
+
   function setProgress(pct) {
-    // Ring arc
     if (ringProgress) {
-      const offset = CIRCUMFERENCE - (pct / 100) * CIRCUMFERENCE;
-      ringProgress.style.strokeDashoffset = offset;
+      ringProgress.style.strokeDashoffset = CIRCUMFERENCE - (pct / 100) * CIRCUMFERENCE;
     }
-    // Thin status bar
     if (loaderBar) loaderBar.style.width = pct + '%';
-    // Counter — animate from previous value
-    if (loaderPct) {
-      const current = parseInt(loaderPct.textContent) || 0;
-      const target  = pct;
-      const step    = Math.ceil((target - current) / 8);
-      let val = current;
-      const tick = setInterval(() => {
-        val = Math.min(val + step, target);
-        loaderPct.innerHTML = val + '<span>%</span>';
-        if (val >= target) clearInterval(tick);
-      }, 28);
-    }
+
+    // Smooth counter
+    const from = currentPct;
+    const to   = pct;
+    const steps = Math.max(1, Math.ceil((to - from) / 6));
+    let val = from;
+    const tick = setInterval(() => {
+      val = Math.min(val + steps, to);
+      if (loaderPct)   loaderPct.innerHTML  = val + '<span>%</span>';
+      if (loaderPctSm) loaderPctSm.textContent = val + '%';
+      if (val >= to) { clearInterval(tick); currentPct = to; }
+    }, 24);
   }
 
   if (loaderScreen) {
@@ -57,12 +57,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const stepInterval = setInterval(() => {
       nextStep();
       if (step >= loadSteps.length) clearInterval(stepInterval);
-    }, 320);
+    }, 330);
 
     setTimeout(() => {
       loaderScreen.classList.add('hidden');
       document.body.classList.remove('is-loading');
-    }, 1550);
+    }, 1600);
   }
 
   // ============================================================

@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="IGITA 2026">
   <meta name="format-detection" content="telephone=no">
-  <title>IGITA 2026 | Informatics Group Innovation & Technology Award</title>
+  <title>IGITA 2026 | IBIKKG Innovation and Technology Award</title>
   <meta name="description" content="IGITA 2026: Kompetisi pengembangan proyek digital berbasis Smart Agriculture. Terbuka untuk Mahasiswa KKG & Siswa SMA/SMK. Daftarkan timmu sekarang!">
   <meta property="og:title" content="IGITA 2026 | Smart Agriculture Innovation">
   <meta property="og:description" content="Kompetisi inovasi teknologi pertanian cerdas. 11 Agustus – 16 September 2026. Pendaftaran terbuka, tanpa batas kuota.">
@@ -19,62 +19,100 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<!-- SVG gradient definitions for loader ring -->
-<svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <defs>
-    <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%"   stop-color="#0055ff"/>
-      <stop offset="100%" stop-color="#00d4ff"/>
-    </linearGradient>
-  </defs>
-</svg>
+
+  <!-- SVG defs for loader -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%"   stop-color="#00aaff"/>
+        <stop offset="60%"  stop-color="#00d4ff"/>
+        <stop offset="100%" stop-color="#0044ff"/>
+      </linearGradient>
+    </defs>
+  </svg>
 
   <!-- Loading Screen -->
   <div class="loader-screen" id="loader-screen" aria-hidden="true">
-    <!-- Ambient background glows -->
-    <div class="loader-bg-glow loader-bg-glow--a"></div>
-    <div class="loader-bg-glow loader-bg-glow--b"></div>
-    <!-- Scan line overlay -->
-    <div class="loader-scanlines"></div>
+
+    <!-- Grid bg -->
+    <div class="loader-grid"></div>
+
+    <!-- Ambient glows -->
+    <div class="loader-glow loader-glow--core"></div>
+    <div class="loader-glow loader-glow--outer"></div>
+    <div class="loader-glow loader-glow--side-l"></div>
+    <div class="loader-glow loader-glow--side-r"></div>
+
+    <!-- HUD corners -->
+    <div class="loader-corner loader-corner--tl"></div>
+    <div class="loader-corner loader-corner--tr"></div>
+    <div class="loader-corner loader-corner--bl"></div>
+    <div class="loader-corner loader-corner--br"></div>
+
+    <!-- Top HUD -->
+    <div class="loader-hud-top">
+      <span class="loader-hud-dot"></span>
+      <span class="loader-hud-label">IGITA 2026</span>
+      <span class="loader-hud-sep"></span>
+      <span class="loader-hud-label">SYSTEM BOOT</span>
+      <span class="loader-hud-dot"></span>
+    </div>
 
     <div class="loader-content">
-      <!-- Ring progress -->
+
+      <!-- Ring assembly -->
       <div class="loader-ring-wrap">
-        <svg class="loader-ring-svg" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <!-- Rotating outer tick marks -->
-          <circle class="loader-ring-track" cx="60" cy="60" r="52" stroke-width="1"/>
-          <circle class="loader-ring-progress" id="loader-ring-progress" cx="60" cy="60" r="52" stroke-width="2.5"
-            stroke-dasharray="326.73" stroke-dashoffset="326.73"
+        <!-- Deco spinning rings -->
+        <div class="loader-deco-ring loader-deco-ring--a"></div>
+        <div class="loader-deco-ring loader-deco-ring--b"></div>
+
+        <!-- SVG: 2*pi*66 = 414.69 -->
+        <svg class="loader-ring-svg" viewBox="0 0 160 160" fill="none">
+          <circle class="loader-ring-track"    cx="80" cy="80" r="66" stroke-width="1.5"/>
+          <circle class="loader-ring-ticks"    cx="80" cy="80" r="74" stroke-width="0.8"/>
+          <circle class="loader-ring-progress" id="loader-ring-progress"
+            cx="80" cy="80" r="66" stroke-width="3.5"
+            stroke-dasharray="414.69" stroke-dashoffset="414.69"
             stroke-linecap="round"/>
-          <!-- Deco inner ring -->
-          <circle class="loader-ring-inner" cx="60" cy="60" r="44" stroke-width="0.5"/>
+          <circle class="loader-ring-inner"    cx="80" cy="80" r="56" stroke-width="0.5"/>
         </svg>
-        <!-- Logo inside ring -->
+
+        <!-- Center -->
         <div class="loader-ring-center">
           <img src="asset/logo.png" alt="IGITA 2026" class="loader-logo">
           <div class="loader-pct" id="loader-pct">0<span>%</span></div>
         </div>
-        <!-- Rotating dot -->
-        <div class="loader-orbit" id="loader-orbit">
+
+        <!-- Orbiting dots -->
+        <div class="loader-orbit loader-orbit--a">
           <div class="loader-orbit-dot"></div>
+        </div>
+        <div class="loader-orbit loader-orbit--b">
+          <div class="loader-orbit-dot loader-orbit-dot--sm"></div>
         </div>
       </div>
 
-      <!-- Brand name -->
+      <!-- Brand text gradient -->
       <div class="loader-brand">
-        <span class="loader-brand-name">IGITA</span>
+        <span class="loader-brand-igita">IGITA</span>
         <span class="loader-brand-year">2026</span>
       </div>
-      <div class="loader-tagline">IBIKKG Innovation and Technology Award</div>
+      <div class="loader-subtitle">IBIKKG Innovation &amp; Technology Award</div>
 
-      <!-- Status bar -->
-      <div class="loader-status-wrap">
-        <div class="loader-status-bar"><div class="loader-status-fill" id="loader-bar"></div></div>
-        <div class="loader-text" id="loader-text">Memuat...</div>
+      <!-- Status -->
+      <div class="loader-bottom">
+        <div class="loader-bar-track">
+          <div class="loader-bar-fill" id="loader-bar"></div>
+        </div>
+        <div class="loader-status-row">
+          <span class="loader-text" id="loader-text">Memuat...</span>
+          <span class="loader-pct-sm" id="loader-pct-sm">0%</span>
+        </div>
       </div>
-    </div>
-  </div>
 
+    </div>
+
+  </div>
   <!-- SVG Filter: mengubah warna logo menjadi cyan tema web #00d4ff -->
   <svg style="display:none" aria-hidden="true">
     <defs>
