@@ -292,6 +292,78 @@ document.addEventListener('DOMContentLoaded', () => {
   //  directly on children, which conflicted with the parent reveal).
 
   // ============================================================
+  // STATUS BAR TICKER — rAF, zero reset-flash, float-precise
+  // ============================================================
+  function initStatusTicker() {
+    const scroll = document.querySelector('.status-scroll');
+    if (!scroll) return;
+
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (prefersReduced.matches) return;
+
+    document.fonts.ready.then(() => {
+      // 2× rAF: tunggu browser selesai layout setelah font load
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+
+        // Ambil span pertama sebagai template, buang sisanya
+        const original = scroll.querySelector('span');
+        if (!original) return;
+        scroll.innerHTML = '';
+        scroll.appendChild(original);
+
+        // Float-precise width — bukan offsetWidth yang integer
+        const singleW = original.getBoundingClientRect().width;
+        if (singleW === 0) return;
+
+        // Clone sampai cukup isi layar × 3 (safety)
+        const copies = Math.ceil((window.innerWidth * 3) / singleW) + 1;
+        for (let i = 0; i < copies; i++) {
+          scroll.appendChild(original.cloneNode(true));
+        }
+
+        const PX_PER_SEC = 45; // kecepatan tetap 45px/detik di semua refresh rate
+        let pos      = 0;
+        let lastTime = null;
+        let rafId    = null;
+
+        function tick(timestamp) {
+          if (lastTime !== null) {
+            const delta = Math.min(timestamp - lastTime, 50); // cap 50ms (tab switch protection)
+            pos -= PX_PER_SEC * (delta / 1000);
+            if (pos <= -singleW) pos += singleW;
+            // translate3d → GPU compositing, tidak ada re-rasterize teks tiap frame
+            scroll.style.transform = `translate3d(${pos}px, 0, 0)`;
+          }
+          lastTime = timestamp;
+          rafId = requestAnimationFrame(tick);
+        }
+
+        rafId = requestAnimationFrame(tick);
+
+        // Pause saat tab tidak aktif
+        document.addEventListener('visibilitychange', () => {
+          if (document.hidden) {
+            cancelAnimationFrame(rafId); rafId = null;
+          } else if (!rafId) {
+            rafId = requestAnimationFrame(tick);
+          }
+        });
+
+        // Recalculate jika resize (font/layout bisa berubah)
+        window.addEventListener('resize', () => {
+          cancelAnimationFrame(rafId);
+          scroll.innerHTML = '';
+          scroll.appendChild(original.cloneNode(true));
+          initStatusTicker();
+        }, { once: true, passive: true });
+
+      }));
+    });
+  }
+
+  initStatusTicker();
+
+  // ============================================================
   // PARTICLE CANVAS
   // ============================================================
   function initParticles() {
