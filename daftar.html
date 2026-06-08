@@ -51,26 +51,15 @@
     @keyframes orbFloat1 { 0% { transform: translate(0,0) scale(1); } 100% { transform: translate(-40px,40px) scale(1.08); } }
     @keyframes orbFloat2 { 0% { transform: translate(0,0) scale(1); } 100% { transform: translate(40px,-30px) scale(1.06); } }
 
-    /* ── Progress bar at very top of modal ── */
+    /* ── Progress bar at very top of modal — full gradient, dekoratif ── */
     .reg-progress-track {
       height: 3px; width: 100%;
-      background: rgba(0,136,255,0.08);
+      background: linear-gradient(90deg, #00d4ff 0%, #0088ff 55%, #818cf8 100%);
       overflow: hidden; position: relative;
+      box-shadow: 0 0 10px rgba(0,136,255,0.4);
     }
     .reg-progress-fill {
-      height: 100%; width: 33.33%;
-      background: linear-gradient(90deg, #00d4ff, #0066ff);
-      border-radius: 0 2px 2px 0;
-      transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
-      box-shadow: 0 0 8px rgba(0,212,255,0.5);
-      position: relative;
-    }
-    .reg-progress-fill::after {
-      content: '';
-      position: absolute; right: 0; top: 50%; transform: translateY(-50%);
-      width: 6px; height: 6px; border-radius: 50%;
-      background: #00d4ff;
-      box-shadow: 0 0 8px rgba(0,212,255,0.9);
+      display: none;
     }
 
     /* ── Header circuit decoration ── */
